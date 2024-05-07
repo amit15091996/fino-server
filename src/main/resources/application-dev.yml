@@ -1,0 +1,27 @@
+server:
+  port: 8098
+
+spring:
+  application:
+    name: inventory
+  datasource:
+    url: jdbc:mysql://localhost:3306/finoclient
+    name: finoclient
+    username: root
+    password: Priya@1997
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+      
+    show-sql: true
+    
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+        
+        
+      
