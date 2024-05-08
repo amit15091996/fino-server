@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.fino.dto.FinoUserDetailsDto;
+import com.fino.entity.FinoUserDetails;
 import com.fino.repository.FinoUserDetailsRepository;
 import com.fino.service.UserService;
 
@@ -43,9 +44,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public FinoUserDetails loadUserByUsername(String mobileNumber) throws UsernameNotFoundException {
 		
-		return this.finoUserDetailsRepository.findfindByUsername(username);
+		return this.finoUserDetailsRepository.findByMobileNumber(mobileNumber);
 	}
 
 }

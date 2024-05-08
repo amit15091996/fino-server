@@ -59,7 +59,7 @@ public class FinoUserDetails implements UserDetails  {
 	private String userName;
 	@Column(length = 30, nullable = false)
 	private String Password;
-	@Column(length = 10, nullable = false)
+	@Column(length = 10, nullable = false,unique = true)
 	private String mobileNumber;
 	@Column(length = 50, nullable = false)
 	private String emailId;

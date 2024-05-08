@@ -11,6 +11,6 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface FinoUserDetailsRepository extends JpaRepository<FinoUserDetails, Long> {
 	
-	FinoUserDetails findfindByUsername(String userName);
+	FinoUserDetails findByMobileNumber(String mobileNumber);
 
 }

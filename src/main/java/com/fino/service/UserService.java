@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fino.dto.FinoUserDetailsDto;
+import com.fino.entity.FinoUserDetails;
 
 public interface UserService {
 
@@ -14,8 +15,7 @@ public interface UserService {
 	Map<Object, Object> deleteFinoUserDetails(Long recieptId);
 
 	Map<Object, Object> updateFinoUserDetails(Long recieptId, FinoUserDetailsDto finoUserDetailsDto);
-
 	Map<Object, Object> getAllFinoUsersDetails();
-	UserDetails loadUserByUsername(String username);
+	FinoUserDetails loadUserByUsername(String username);
 	
 }
