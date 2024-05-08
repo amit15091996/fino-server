@@ -7,8 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import com.fino.entity.FinoUserDetails;
 import com.fino.service.UserService;
 
 import exception.BadRequest;
@@ -17,30 +20,29 @@ import exception.BadRequest;
 @Component
 public class CustomAuthentication implements AuthenticationProvider {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 	
 	@Autowired
 	private UserService userService;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getPrincipal().toString();
+		FinoUserDetails finoUserAuthenticate = (FinoUserDetails)authentication.getPrincipal();
 		String password = (String) authentication.getCredentials();
 
-		UserDetails userDetails= this.userService.loadUserByUsername(username);
+		FinoUserDetails finoUserDetails= this.userService.loadUserByUsername(finoUserAuthenticate.getMobileNumber());
 
-		if (userDetails == null || !userDetails.getUsername().equalsIgnoreCase(username)) {
+		if (finoUserDetails == null || !finoUserDetails.getMobileNumber().equalsIgnoreCase(finoUserAuthenticate.getMobileNumber())) {
 			throw new BadRequest("Please check your user Id");
 		}
 
-		else if (!this.passwordEncoder.matches(password, userDetails.getPassword())) {
+		else if (!this.passwordEncoder.matches(password, finoUserDetails.getPassword())) {
 			throw new BadRequest("Please check your password and try again....... ");
 		}
 
-		java.util.Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+		java.util.Collection<? extends GrantedAuthority> authorities = finoUserDetails.getAuthorities();
 
-		return new UsernamePasswordAuthenticationToken(userDetails, password, authorities);
+		return new UsernamePasswordAuthenticationToken(finoUserDetails, password, authorities);
 
 	}
 

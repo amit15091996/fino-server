@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,7 +30,16 @@ public class FinoConfiguration {
 
 	@Autowired
 	private CustomAuthentication customAuthentication;
+	
+	@Autowired
+	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	
+	@Autowired
+	private CustomAccessDeniedHandler customAccessDeniedHandler;
 
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
+	
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -45,9 +56,8 @@ public class FinoConfiguration {
 	@Bean
 	 CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("*")); // Allow requests from all origins
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP
-																									// methods
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Allow requests from all origins
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP																				// methods
 		configuration.setAllowedHeaders(Arrays.asList("*")); // Allowed
 		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -55,21 +65,19 @@ public class FinoConfiguration {
 		return source;
 	}
 
-//	@Bean
-//	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-//						.requestMatchers("/auth/**", "/entry/point/**").authenticated()
-//						.requestMatchers("eidiko/internal/userdata/**", "eidiko/internal/authentication/**",
-//								"/employee/image/**", "/multithread/**", "/login1", "/eidiko/**", "location/**")
-//						.permitAll()
-//
-//				).exceptionHandling(ex -> ex.authenticationEntryPoint(JwtAuthenticationInitialPoint))
-//				.exceptionHandling(ex -> ex.accessDeniedHandler(CustomAccessDeniedHandler))
-//				.sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//		http.addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//		return http.build();
-//	}
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+						.requestMatchers("/fino/system/operation/").authenticated()
+						.requestMatchers("/fino/system/auth").permitAll()
+
+				).exceptionHandling(ex -> ex.authenticationEntryPoint(this.jwtAuthenticationEntryPoint))
+				.exceptionHandling(ex -> ex.accessDeniedHandler(this.customAccessDeniedHandler))
+				.sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
 
 }
