@@ -57,14 +57,14 @@ public class FinoUserDetails implements UserDetails  {
 	private LocalDate dateOfBirth;
 	@Column(length = 25, nullable = false)
 	private String userName;
-	@Column(length = 30, nullable = false)
+	@Column(length =1000, nullable = false)
 	private String Password;
 	@Column(length = 10, nullable = false,unique = true)
 	private String mobileNumber;
 	@Column(length = 50, nullable = false)
 	private String emailId;
 	
-	@OneToMany(mappedBy = "finoUserDetails",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "finoUserDetails",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonManagedReference
 	private List<FinoUserRoles> finoUserRoles;
 	

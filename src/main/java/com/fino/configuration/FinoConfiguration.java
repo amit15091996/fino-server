@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.fino.service.UserService;
 
 
 
@@ -40,6 +43,9 @@ public class FinoConfiguration {
 	@Autowired
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 	
+	@Autowired
+	private UserService userService;
+	
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -47,8 +53,10 @@ public class FinoConfiguration {
 
 	@Bean
 	AuthenticationManager authManager(HttpSecurity http) throws Exception {
+		
 		AuthenticationManagerBuilder authenticationManagerBuilder = http
 				.getSharedObject(AuthenticationManagerBuilder.class);
+		authenticationManagerBuilder.userDetailsService( this.userService);
 		authenticationManagerBuilder.authenticationProvider(this.customAuthentication);
 		return authenticationManagerBuilder.build();
 	}
@@ -69,10 +77,11 @@ public class FinoConfiguration {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-						.requestMatchers("/fino/system/operation/").authenticated()
-						.requestMatchers("/fino/system/auth").permitAll()
+						.requestMatchers("/fino/system/operation/**").authenticated()
+						.requestMatchers("/fino/system/auth/**").permitAll()
 
-				).exceptionHandling(ex -> ex.authenticationEntryPoint(this.jwtAuthenticationEntryPoint))
+				)
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(this.jwtAuthenticationEntryPoint))
 				.exceptionHandling(ex -> ex.accessDeniedHandler(this.customAccessDeniedHandler))
 				.sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

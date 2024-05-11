@@ -18,6 +18,7 @@ public class AppConstants {
 	public static final String recordUpdatedSuccessFully = "Record updated Successfully with Id ";
 	public static final String requestBodyMissing = "Required Request Body Is Missing ";
 	public static final String dataFetchedSuccesfully = "Data fetched Successfully !!";
+	public static final String userLoggedInSuccesfully = "User Logged In Successfully !!";
 	public static final String error = "error";
 	public static final String ALL = "ALL";
 	public static final String submitedFileId = "submitedFileId";
@@ -61,12 +62,17 @@ public class AppConstants {
 	public static final String Bad_Gateway_desc = "BAD_GATEWAY";
 	public static final String Service_Unavailable_desc = "SERVICE_UNAVAILABLE";
 	public static final String Gateway_Timeout_desc = "GATEWAY_TIMEOUT";
-	
 	public static final String ADMIN_ROLE= "ADMIN";
 	public static final String ADMIN_ROLE_DESC= "This is  ADMIN Role";
 	public static final String MANAGER_ROLE= "MANAGER";
 	public static final String MANAGER_ROLE_DESC= "This is MANAGER Role";
 	public static final String USER_ROLE= "USER";
 	public static final String USER_ROLE_DESC= "This is USER Role";
+	public static final String CLIENT_ROLE= "CLIENT";
+	public static final String CLIENT_ROLE_DESC= "This is CLIENT Role";
+	public static final String USER_NAME= "userName";
+	public static final String JWT_TOKEN= "jwtToken";
+	public static final String TOKEN_EXPIRATION_IN_MILIS= "tokenExpirationInMilis";
+	public static final String USER_ROLES= "userRoles";
 
 }

@@ -18,7 +18,7 @@ public class JwtHelpers {
 
 public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 	
-	private String SECRET_KEY="priyaaaaapandabbbbbbpriyaccccccppppppppppppkkkkkkkkkkkkkk";
+	private String SECRET_KEY="dd5822d4123f4a1036cf0ea5c9e0eee6987742e44ffc9f202e6147d04d5e2aef57fef161be6bf34d0c401ba5099edb91df19254a198347abfafde2a1ad44b590b0ea144f558bdd8ab1a8731e659c080a1525d11eb42b37619e53de006dd9642f9bd4e6b9b363044692a4452d8cbd36b02edc7567ed548a37b507e7df9c86e3d7";
 	
 
 	//retrieve username from jwt token
@@ -45,8 +45,8 @@ public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 		//generate token for user
 		public String generateToken(FinoUserDetails finoFserDetails) {
 			Map<String, Object> claims = new HashMap<>();
-			claims.put("role",finoFserDetails.getAuthorities());
-			return doGenerateToken(claims, finoFserDetails.getUsername());
+//			claims.put("role",finoFserDetails.getAuthorities());
+			return doGenerateToken(claims, finoFserDetails.getMobileNumber());
 		}
 		//while creating the token -
 		//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
@@ -55,7 +55,7 @@ public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 		//   compaction of the JWT to a URL-safe string 
 		private String doGenerateToken(Map<String, Object> claims, String subject) {
 			return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-					.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+					.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
 					.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
 		}
 		//validate token

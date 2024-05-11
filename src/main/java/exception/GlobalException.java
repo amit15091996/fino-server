@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -127,6 +128,24 @@ public class GlobalException {
 		responseStatusMap.put(AppConstants.statusMessage, responseStatus.getMessage());
 		responseStatusMap.put(AppConstants.description, responseStatus.getDescription());
 		return ResponseEntity.ok(responseStatusMap);
+
+	}
+	
+
+	@ExceptionHandler(CustomAuthenticationException.class)
+	public ResponseEntity<Map<Object, Object>> responseStatusError(CustomAuthenticationException customAuthenticationException,
+			WebRequest request) {
+
+		CustomException customAuthExe = new CustomException(AppConstants.Unauthorized,
+				AppConstants.Unauthorized_desc, LocalDateTime.now(),customAuthenticationException.getMessage(),
+				request.getDescription(false));
+		Map<Object, Object> customAuthExeMap = new HashMap<>();
+		customAuthExeMap.put(AppConstants.statusCode, customAuthExe.getStatusCode());
+		customAuthExeMap.put(AppConstants.status, customAuthExe.getStatus());
+		customAuthExeMap.put(AppConstants.timeStamp, customAuthExe.getTimestamp().toString());
+		customAuthExeMap.put(AppConstants.statusMessage, customAuthExe.getMessage());
+		customAuthExeMap.put(AppConstants.description, customAuthExe.getDescription());
+		return ResponseEntity.ok(customAuthExeMap);
 
 	}
 	

@@ -19,6 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomException {
+	
+	
 	private int statusCode;
 	private String status;
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

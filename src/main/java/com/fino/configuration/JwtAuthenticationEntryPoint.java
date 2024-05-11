@@ -1,6 +1,7 @@
 package com.fino.configuration;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fino.helpers.AppConstants;
 
+import exception.CustomException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,14 +28,19 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	
 		final ObjectMapper mapper = new ObjectMapper();	
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setStatus(HttpServletResponse.SC_OK);
 		final Map<String, Object> body = new HashMap<>();
-		body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-		body.put("statuscode", HttpStatus.UNAUTHORIZED);
-		body.put("message", authException.getMessage());
-		body.put("path", request.getServletPath());
-		mapper.writeValue(response.getOutputStream(), body);
+
+		CustomException authorisedExe = new CustomException(AppConstants.Unauthorized, AppConstants.Unauthorized_desc,
+				LocalDateTime.now(), authException.getMessage(),request.getServletPath());
+		body.put(AppConstants.statusCode, authorisedExe.getStatusCode());
+		body.put(AppConstants.status, authorisedExe.getStatus());
+		body.put(AppConstants.timeStamp, authorisedExe.getTimestamp().toString());
+		body.put(AppConstants.statusMessage, authorisedExe.getMessage());
+		body.put(AppConstants.description, request.getServletPath());
 		
+		
+		mapper.writeValue(response.getOutputStream(), body);
 	}
 
 }
