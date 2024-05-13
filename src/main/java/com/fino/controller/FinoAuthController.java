@@ -41,8 +41,7 @@ public class FinoAuthController {
 	
 	private void finoAuthentication(String mobileNumber,String password)  {
 		UsernamePasswordAuthenticationToken userNamePasswordauth=new UsernamePasswordAuthenticationToken(mobileNumber, password);
-
-			this.customAuthentication.authenticate(userNamePasswordauth);
+        this.customAuthentication.authenticate(userNamePasswordauth);
 
 	}
 }
