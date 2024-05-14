@@ -12,6 +12,7 @@ import com.fino.entity.FinoUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtHelpers {
@@ -35,7 +36,7 @@ public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 		}
 	    //for retrieveing any information from token we will need the secret key
 		private Claims getAllClaimsFromToken(String token) {
-			return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+			return Jwts.parserBuilder().setSigningKey(SECRET_KEY.getBytes()).build().parseClaimsJws(token).getBody();
 		}
 		//check if the token has expired
 		private Boolean isTokenExpired(String token) {
@@ -56,7 +57,7 @@ public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 		private String doGenerateToken(Map<String, Object> claims, String subject) {
 			return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 					.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-					.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+					.signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()),SignatureAlgorithm.HS256).compact();
 		}
 		//validate token
 		public Boolean validateToken(String token, FinoUserDetails finoFserDetails) {

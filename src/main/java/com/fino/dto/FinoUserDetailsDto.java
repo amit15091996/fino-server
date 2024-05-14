@@ -31,8 +31,6 @@ public class FinoUserDetailsDto {
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@NotNull(message = "Please enter your  Date Of Birth(Mandatory)")
 	private LocalDate dateOfBirth;
-	@NotBlank(message = "Please enter your User Name(Mandatory)")
-	private String userName;
 	@NotBlank(message = "Please enter your Password (Mandatory)")
 	private String Password;
 	@Size(max = 10, min = 10, message = "Mobile number should be 10 digit")
