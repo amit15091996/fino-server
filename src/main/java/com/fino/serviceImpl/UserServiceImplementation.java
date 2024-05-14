@@ -54,7 +54,7 @@ public class UserServiceImplementation implements UserService {
 			finoUserDetails.setMobileNumber(finoUserDetailsDto.getMobileNumber());
 			finoUserDetails.setPassword(this.passwordEncoder.encode(finoUserDetailsDto.getPassword()));
 			finoUserRoles.setRoleName(finoUserDetailsDto.getUserRole());
-			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + "Role");
+			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + " Role");
 			finoUserRoles.setFinoUserDetails(finoUserDetails);
 			finoUserDetails.setFinoUserRoles(Arrays.asList(finoUserRoles));
 			this.finoUserDetailsRepository.save(finoUserDetails);
