@@ -1,5 +1,4 @@
-package exception;
-
+package com.fino.exception;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.fino.helpers.AppConstants;
 @RestControllerAdvice
 public class GlobalException {
 
-	
 	
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<Map<Object, Object>> noDataAvailable(NotFoundException notFoundException,
@@ -149,6 +147,21 @@ public class GlobalException {
 
 	}
 	
-	
+	@ExceptionHandler(DataAlreadyPresents.class)
+	public ResponseEntity<Map<Object, Object>> dataAlreadyPresentException(DataAlreadyPresents dataAlreadyPresents,
+			WebRequest request) {
+
+		CustomException dataAlreadyPresentsEx = new CustomException(AppConstants.not_Modified,
+				AppConstants.not_Modified_desc, LocalDateTime.now(),dataAlreadyPresents.getMessage(),
+				request.getDescription(false));
+		Map<Object, Object> dataAlreadyPresentsExMap = new HashMap<>();
+		dataAlreadyPresentsExMap.put(AppConstants.statusCode, dataAlreadyPresentsEx.getStatusCode());
+		dataAlreadyPresentsExMap.put(AppConstants.status, dataAlreadyPresentsEx.getStatus());
+		dataAlreadyPresentsExMap.put(AppConstants.timeStamp, dataAlreadyPresentsEx.getTimestamp().toString());
+		dataAlreadyPresentsExMap.put(AppConstants.statusMessage, dataAlreadyPresentsEx.getMessage());
+		dataAlreadyPresentsExMap.put(AppConstants.description, dataAlreadyPresentsEx.getDescription());
+		return ResponseEntity.ok(dataAlreadyPresentsExMap);
+
+	}
 	
 }

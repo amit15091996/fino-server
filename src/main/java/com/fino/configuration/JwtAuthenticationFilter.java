@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.fino.entity.FinoUserDetails;
 import com.fino.service.UserService;
 
-import exception.InternalServerError;
+import com.fino.exception.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+
+
 	@Autowired
 	private UserService userService;
 	@Autowired

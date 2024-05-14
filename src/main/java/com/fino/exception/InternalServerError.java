@@ -1,4 +1,4 @@
-package exception;
+package com.fino.exception;
 
 public class InternalServerError extends RuntimeException {
 	private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package exception;
+package com.fino.exception;
 
 public class BadRequest extends RuntimeException {
 	

@@ -1,4 +1,4 @@
-package exception;
+package com.fino.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

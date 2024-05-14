@@ -3,6 +3,7 @@ package com.fino.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,22 +28,22 @@ public class FinoAuthController {
 	private CustomAuthentication customAuthentication;
 
 	@PostMapping("/sign-up")
-	public Map<Object, Object> userSignUp(@RequestBody @Valid FinoUserDetailsDto finoUserDetailsDto) {
+	public ResponseEntity<Map<Object, Object>> userSignUp(@RequestBody @Valid FinoUserDetailsDto finoUserDetailsDto) {
 
-		return this.userService.insertFinoUserDetails(finoUserDetailsDto);
+		return ResponseEntity.ok(this.userService.insertFinoUserDetails(finoUserDetailsDto));
 	}
 
 	@PostMapping("/sign-in")
-	public Map<Object, Object> userSignIn(@RequestParam(name = "mobileNumber", required = true) String mobileNumber,
+	public ResponseEntity<Map<Object, Object>> userSignIn(@RequestParam(name = "mobileNumber", required = true) String mobileNumber,
 			@RequestParam(name = "password", required = true) String password) {
 		this.finoAuthentication(mobileNumber, password);
-		return this.userService.onUserlogin(mobileNumber, password);
+		return ResponseEntity.ok(this.userService.onUserlogin(mobileNumber, password));
 	}
+	
 	
 	private void finoAuthentication(String mobileNumber,String password)  {
 		UsernamePasswordAuthenticationToken userNamePasswordauth=new UsernamePasswordAuthenticationToken(mobileNumber, password);
-
-			this.customAuthentication.authenticate(userNamePasswordauth);
+        this.customAuthentication.authenticate(userNamePasswordauth);
 
 	}
 }

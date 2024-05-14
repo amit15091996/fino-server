@@ -3,6 +3,7 @@ package com.fino.configuration;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import com.fino.service.UserService;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 @EnableAsync
+@EnableConfigurationProperties
 public class FinoConfiguration {
 
 	@Autowired
@@ -78,6 +80,7 @@ public class FinoConfiguration {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						.requestMatchers("/fino/system/operation/**").authenticated()
+						.requestMatchers("/fino/system/user/**").authenticated()
 						.requestMatchers("/fino/system/auth/**").permitAll()
 
 				)

@@ -16,6 +16,7 @@ public class AppConstants {
 	public static final String dataDeletedSuccesFully = "Record Deleted Successfully thank you!";
 	public static final String noRecordFound = "No Record Found !! with the Id ";
 	public static final String recordUpdatedSuccessFully = "Record updated Successfully with Id ";
+	public static final String roleUpdatedSuccessFully = "Role updated Successfully for user";
 	public static final String requestBodyMissing = "Required Request Body Is Missing ";
 	public static final String dataFetchedSuccesfully = "Data fetched Successfully !!";
 	public static final String userLoggedInSuccesfully = "User Logged In Successfully !!";
@@ -27,6 +28,7 @@ public class AppConstants {
 	public static final int created = 201;
 	public static final int accepeted = 202;
 	public static final int Already_Reported = 208;
+	public static final int not_Modified = 304;
 	public static final int Bad_Request = 400;
 	public static final int Unauthorized = 401;
 	public static final int Forbidden = 403;
@@ -46,6 +48,7 @@ public class AppConstants {
 	public static final String ok_desc = "ok";
 	public static final String created_desc = "CREATED";
 	public static final String accepeted_desc = "ACCEPTED";
+	public static final String not_Modified_desc = "NOT_MODIFIED";
 	public static final String Already_Reported_desc = "ALREADY_REPORTED";
 	public static final String Bad_Request_desc = "BAD_REQUEST";
 	public static final String Unauthorized_desc = "UNAUTHORIZED";
@@ -67,7 +70,7 @@ public class AppConstants {
 	public static final String MANAGER_ROLE= "MANAGER";
 	public static final String MANAGER_ROLE_DESC= "This is MANAGER Role";
 	public static final String USER_ROLE= "USER";
-	public static final String USER_ROLE_DESC= "This is USER Role";
+	public static final String USER_ROLE_DESC= "This is a ";
 	public static final String CLIENT_ROLE= "CLIENT";
 	public static final String CLIENT_ROLE_DESC= "This is CLIENT Role";
 	public static final String USER_NAME= "userName";

@@ -64,7 +64,7 @@ public class FinoUserDetails implements UserDetails  {
 	@Column(length = 50, nullable = false)
 	private String emailId;
 	
-	@OneToMany(mappedBy = "finoUserDetails",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(mappedBy = "finoUserDetails",fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
 	@JsonManagedReference
 	private List<FinoUserRoles> finoUserRoles;
 	
