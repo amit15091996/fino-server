@@ -1,7 +1,6 @@
 package com.fino.serviceImpl;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,10 +21,8 @@ import com.fino.repository.FinoUserDetailsRepository;
 import com.fino.repository.FinoUserRolesRepository;
 import com.fino.service.UserService;
 import com.fino.exception.*;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class UserServiceImplementation implements UserService {
 
 	@Autowired
@@ -46,7 +43,6 @@ public class UserServiceImplementation implements UserService {
 		var finoUserRoles = new FinoUserRoles();
 
 		try {
-			finoUserDetails.setUserName(finoUserDetailsDto.getUserName());
 			finoUserDetails.setDateOfBirth(finoUserDetailsDto.getDateOfBirth());
 			finoUserDetails.setEmailId(finoUserDetailsDto.getEmailId());
 			finoUserDetails.setFirstName(finoUserDetailsDto.getFirstName());

@@ -55,8 +55,6 @@ public class FinoUserDetails implements UserDetails  {
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
-	@Column(length = 25, nullable = false)
-	private String userName;
 	@Column(length =1000, nullable = false)
 	private String Password;
 	@Column(length = 10, nullable = false,unique = true)
@@ -75,7 +73,7 @@ public class FinoUserDetails implements UserDetails  {
 	@Override
 	public String getUsername() {
 		
-		return this.userName;
+		return this.mobileNumber;
 	}
 	@Override
 	public boolean isAccountNonExpired() {
