@@ -11,35 +11,30 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class FinoUserDetailsDto {
-	@NotBlank(message = "Please enter your First Name(Mandatory)")
-	private String firstName;
-	@NotBlank(message = "Please enter your Last Name(Mandatory)")
-	private String lastName;
+public class TransactionDetailsDto {
+	@NotBlank(message = "Please enter your Recieved From(Mandatory)")
+	private String recievedFrom;
+	@NotBlank(message = "Please enter your First Collected By(Mandatory)")
+	private String collectedBy;
+	@NotNull(message = "Please enter your  Collection Amount(Mandatory)")
+	private double collectionAmount;
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@NotNull(message = "Please enter your  Date Of Birth(Mandatory)")
-	private LocalDate dateOfBirth;
-	@NotBlank(message = "Please enter your User Name(Mandatory)")
-	private String userName;
-	@NotBlank(message = "Please enter your Password (Mandatory)")
-	private String Password;
-	@Size(max = 10, min = 10, message = "Mobile number should be 10 digit")
-	private String mobileNumber;
-	@NotBlank(message = "Please enter your Email Id (Mandatory)")
-	private String emailId;
-	@NotBlank(message = "Please enter your User Role(Mandatory)")
-	private String userRole;
+	private LocalDate TransactionDate;
+	private double onlineAmount;
+	private double cashAmount;
+	private double balanceAmount;
+	private String remarks;
 
 }

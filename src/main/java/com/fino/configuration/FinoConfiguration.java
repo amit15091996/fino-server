@@ -80,6 +80,7 @@ public class FinoConfiguration {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						.requestMatchers("/fino/system/operation/**").authenticated()
+						.requestMatchers("/fino/system/user/**").authenticated()
 						.requestMatchers("/fino/system/auth/**").permitAll()
 
 				)

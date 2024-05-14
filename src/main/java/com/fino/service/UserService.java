@@ -16,5 +16,6 @@ public interface UserService extends UserDetailsService {
 	Map<Object, Object> getAllFinoUsersDetails();
 	FinoUserDetails loadUserByUsername(String mobileNumber);
 	Map<Object, Object> onUserlogin(String mobileNumber,String password);
-	
+	Map<Object, Object> assignANewRole(String mobileNumber,String newRole);
+	Map<Object, Object> deletePreviousAssignedRole(Long roleId);
 }

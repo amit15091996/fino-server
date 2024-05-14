@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.fino.entity.FinoUserDetails;
 import com.fino.service.UserService;
 
-import exception.InternalServerError;
+import com.fino.exception.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

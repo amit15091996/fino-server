@@ -61,7 +61,7 @@ public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 		//validate token
 		public Boolean validateToken(String token, FinoUserDetails finoFserDetails) {
 			final String username = getUsernameFromToken(token);
-			return (username.equals(finoFserDetails.getUsername()) && !isTokenExpired(token));
+			return (username.equals(finoFserDetails.getMobileNumber()) && !isTokenExpired(token));
 		}
 	
 }
