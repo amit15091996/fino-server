@@ -30,7 +30,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
 		final Map<String, Object> body = new HashMap<>();
 
 		CustomException authorisedExe = new CustomException(AppConstants.Unauthorized, AppConstants.Unauthorized_desc,
-				LocalDateTime.now(), authException.getMessage(),request.getServletPath());
+		LocalDateTime.now(), authException.getMessage(),request.getServletPath());
 		body.put(AppConstants.statusCode, authorisedExe.getStatusCode());
 		body.put(AppConstants.status, authorisedExe.getStatus());
 		body.put(AppConstants.timeStamp, authorisedExe.getTimestamp().toString());
