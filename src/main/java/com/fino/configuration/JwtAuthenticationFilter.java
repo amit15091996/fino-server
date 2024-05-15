@@ -1,10 +1,14 @@
 package com.fino.configuration;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -12,10 +16,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fino.entity.FinoUserDetails;
 import com.fino.service.UserService;
 
 import com.fino.exception.*;
+import com.fino.helpers.AppConstants;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,10 +54,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		final String requestTokenHeader = request.getHeader("Authorization");
-
 		String mobileNumber = null;
 		String jwtToken = null;
 		log.info("token:- " + requestTokenHeader);
+	    final ObjectMapper mapper = new ObjectMapper();	
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setStatus(HttpServletResponse.SC_OK);
+		final Map<String, Object> errorMap = new HashMap<>();
+
 
 		try {
 			if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
@@ -65,12 +76,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 								.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 					} else {
-						logger.info("authentication failed");
+						log.info("authentication failed");
 					}
 				}
 
 				else {
-					logger.warn("JWT Token does not begin with Bearer String");
+					log.warn("JWT Token does not begin with Bearer String");
 				}
 
 			}
@@ -78,8 +89,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		catch (Exception e) {
-			
-			throw new InternalServerError(e.getMessage());
+		CustomException authorisedExe = new CustomException(AppConstants.Unauthorized, AppConstants.Unauthorized_desc,
+		LocalDateTime.now(), e.getMessage(),request.getServletPath());
+		errorMap.put(AppConstants.statusCode, authorisedExe.getStatusCode());
+		errorMap.put(AppConstants.status, authorisedExe.getStatus());
+		errorMap.put(AppConstants.timeStamp, authorisedExe.getTimestamp().toString());
+		errorMap.put(AppConstants.statusMessage, authorisedExe.getMessage());
+		errorMap.put(AppConstants.description, request.getServletPath());
+		mapper.writeValue(response.getOutputStream(), errorMap);
 
 		}
 
