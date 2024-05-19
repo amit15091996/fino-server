@@ -17,9 +17,9 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtHelpers {
 
-public static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
+    private static final long JWT_TOKEN_VALIDITY=24*60*60*1000;
 	
-	private String SECRET_KEY="dd5822d4123f4a1036cf0ea5c9e0eee6987742e44ffc9f202e6147d04d5e2aef57fef161be6bf34d0c401ba5099edb91df19254a198347abfafde2a1ad44b590b0ea144f558bdd8ab1a8731e659c080a1525d11eb42b37619e53de006dd9642f9bd4e6b9b363044692a4452d8cbd36b02edc7567ed548a37b507e7df9c86e3d7";
+	private static final String SECRET_KEY="dd5822d4123f4a1036cf0ea5c9e0eee6987742e44ffc9f202e6147d04d5e2aef57fef161be6bf34d0c401ba5099edb91df19254a198347abfafde2a1ad44b590b0ea144f558bdd8ab1a8731e659c080a1525d11eb42b37619e53de006dd9642f9bd4e6b9b363044692a4452d8cbd36b02edc7567ed548a37b507e7df9c86e3d7";
 	
 
 	//retrieve username from jwt token

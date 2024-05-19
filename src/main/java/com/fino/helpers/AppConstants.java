@@ -5,6 +5,7 @@ public class AppConstants {
 	public static final String statusMessage = "statusMessage";
 	public static final String success = "success";
 	public static final String dataSubmitedsuccessfully = "Data Submitted Successfully thank you!";
+	public static final String passwordSentSuccessfully = "Password Sent Successfully thank you!";
 	public static final String response = "response";
 	public static final String status = "status";
 	public static final String statusCode = "statusCode";
