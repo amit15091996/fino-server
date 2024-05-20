@@ -34,7 +34,7 @@ public class JavaMailUtil {
 		thymContext.setVariable("userName", userName);
 		thymContext.setVariable("password",password);
 		try {
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "text/html; charset=utf-8");
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "utf-8");
 			mimeMessageHelper.setFrom(this.setFrom);
 			mimeMessageHelper.setTo(setTo);
 			mimeMessageHelper.setCc(this.setFrom);

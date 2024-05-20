@@ -116,7 +116,7 @@ public class UserServiceImplementation implements UserService {
 				userLoginMap.put(AppConstants.JWT_TOKEN, jwtToken);
 				userLoginMap.put(AppConstants.TOKEN_EXPIRATION_IN_MILIS,
 						this.jwtHelpers.getExpirationDateFromToken(jwtToken).toInstant().toEpochMilli());
-				userLoginMap.put(AppConstants.USER_ROLES, finoUser.getFinoUserRoles());
+				userLoginMap.put(AppConstants.USER_ROLES, finoUser.getFinoUserRoles().stream().map(role->role.getRoleName()).collect(Collectors.toList()));
 				userLoginMap.put(AppConstants.status, AppConstants.success);
 				userLoginMap.put(AppConstants.statusCode, AppConstants.ok);
 				userLoginMap.put(AppConstants.statusMessage, AppConstants.userLoggedInSuccesfully);

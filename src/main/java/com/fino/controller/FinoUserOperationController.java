@@ -43,7 +43,7 @@ public class FinoUserOperationController {
 	@PreAuthorize(AuthorizationHelpers.USER_AUTH)
 	public ResponseEntity<Map<Object, Object>> resetPassword(@RequestParam(name = "mobileNumber",required = true) String mobileNumber,
 			@RequestParam(name = "oldPassword",required = true) String oldPassword,
-			@RequestParam(name = "oldPassword",required = true) String newPassword
+			@RequestParam(name = "newPassword",required = true) String newPassword
 			) {
 		return ResponseEntity.ok(this.userService.changePassword(mobileNumber,oldPassword,newPassword));
 	}
