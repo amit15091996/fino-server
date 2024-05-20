@@ -5,6 +5,7 @@ public class AppConstants {
 	public static final String statusMessage = "statusMessage";
 	public static final String success = "success";
 	public static final String dataSubmitedsuccessfully = "Data Submitted Successfully thank you!";
+	public static final String passwordSentSuccessfully = "Password Sent Successfully thank you!";
 	public static final String response = "response";
 	public static final String status = "status";
 	public static final String statusCode = "statusCode";
@@ -14,6 +15,7 @@ public class AppConstants {
 	public static final String inactiveRequisation = "Sorry No inactive requisation available at this moment";
 	public static final String roadblock = "Sorry we hit a road block, please try again with valid input field";
 	public static final String dataDeletedSuccesFully = "Record Deleted Successfully thank you!";
+	public static final String passwordUpdatedSuccesFully = "Password changed Successfully thank you!";
 	public static final String noRecordFound = "No Record Found !! with the Id ";
 	public static final String recordUpdatedSuccessFully = "Record updated Successfully with Id ";
 	public static final String roleUpdatedSuccessFully = "Role updated Successfully for user";

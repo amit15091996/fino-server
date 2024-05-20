@@ -1,5 +1,6 @@
 package com.fino.service;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,4 +19,6 @@ public interface UserService extends UserDetailsService {
 	Map<Object, Object> onUserlogin(String mobileNumber,String password);
 	Map<Object, Object> assignANewRole(String mobileNumber,String newRole);
 	Map<Object, Object> deletePreviousAssignedRole(Long roleId);
+	Map<Object, Object> resetPassword(String mobileNumber,LocalDate dateOfBirth);
+	Map<Object, Object> changePassword(String mobileNumber,String oldPassword,String newPassword);
 }

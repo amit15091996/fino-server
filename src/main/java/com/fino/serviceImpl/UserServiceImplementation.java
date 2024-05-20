@@ -1,5 +1,6 @@
 package com.fino.serviceImpl;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,8 @@ import com.fino.records.UserRecords;
 import com.fino.repository.FinoUserDetailsRepository;
 import com.fino.repository.FinoUserRolesRepository;
 import com.fino.service.UserService;
+import com.fino.utils.JavaMailUtil;
+import com.fino.utils.RandomPasswordGenerator;
 import com.fino.exception.*;
 
 @Service
@@ -35,6 +38,12 @@ public class UserServiceImplementation implements UserService {
 
 	@Autowired
 	private FinoUserRolesRepository finoUserRolesRepository;
+
+	@Autowired
+	private JavaMailUtil javaMailUtil;
+
+	@Autowired
+	private RandomPasswordGenerator randomPasswordGenerator;
 
 	@Override
 	public Map<Object, Object> insertFinoUserDetails(FinoUserDetailsDto finoUserDetailsDto) {
@@ -168,6 +177,57 @@ public class UserServiceImplementation implements UserService {
 			throw new NotFoundException(AppConstants.noRecordFound + roleId);
 		}
 		return userResponseMap;
+	}
+
+	@Override
+	public Map<Object, Object> resetPassword(String mobileNumber, LocalDate dateOfBirth) {
+
+		var finoUserDetails = this.finoUserDetailsRepository.findByMobileNumber(mobileNumber);
+
+		if (finoUserDetails != null && finoUserDetails.getMobileNumber().equalsIgnoreCase(mobileNumber)
+				&& finoUserDetails.getDateOfBirth().isEqual(dateOfBirth)) {
+			var newPassword = this.randomPasswordGenerator.doGeneratePassword(11);
+			Map<Object, Object> mailMap = null;
+			try {
+				mailMap = this.javaMailUtil.sendTextMail(finoUserDetails.getEmailId(), "Login Crendtials",
+						finoUserDetails.getFirstName() + " " + finoUserDetails.getLastName(), newPassword);
+				this.finoUserDetailsRepository.updateFinoUserPassword(this.passwordEncoder.encode(newPassword),
+						mobileNumber);
+			} catch (Exception e) {
+				throw new InternalServerError(e.getMessage());
+			}
+
+			return mailMap;
+		}
+
+		else {
+			throw new BadRequest("Please check your userName or date of birth and try again...");
+		}
+	}
+
+	@Override
+	public Map<Object, Object> changePassword(String mobileNumber,String oldPassword, String newPassword) {
+		var finoUserDetails = this.finoUserDetailsRepository.findByMobileNumber(mobileNumber);
+		Map<Object, Object> userResponseMap = new HashMap<>();
+		if(finoUserDetails !=null && this.passwordEncoder.matches(oldPassword,finoUserDetails.getPassword())) {
+		  
+			try {
+				this.finoUserDetailsRepository.updateFinoUserPassword(this.passwordEncoder.encode(newPassword), mobileNumber);
+				userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				userResponseMap.put(AppConstants.status, AppConstants.success);
+				userResponseMap.put(AppConstants.statusMessage, AppConstants.passwordUpdatedSuccesFully);
+				
+			}catch (Exception e) {
+				throw new InternalServerError(e.getMessage());
+			}
+			
+		return 	userResponseMap;
+		}
+		else {
+			throw new BadRequest("Password didn't match please check your old password and try again...");
+		}
+		
+	
 	}
 
 }

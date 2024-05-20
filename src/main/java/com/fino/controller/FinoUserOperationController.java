@@ -38,4 +38,14 @@ public class FinoUserOperationController {
 	public ResponseEntity<Map<Object, Object>> deleteAssignedRoles(@RequestParam(name = "roleId",required = true) Long roleId) {
 		return ResponseEntity.ok(this.userService.deletePreviousAssignedRole(roleId));
 	}
+	
+	@PostMapping("/reset-password")
+	@PreAuthorize(AuthorizationHelpers.USER_AUTH)
+	public ResponseEntity<Map<Object, Object>> resetPassword(@RequestParam(name = "mobileNumber",required = true) String mobileNumber,
+			@RequestParam(name = "oldPassword",required = true) String oldPassword,
+			@RequestParam(name = "oldPassword",required = true) String newPassword
+			) {
+		return ResponseEntity.ok(this.userService.changePassword(mobileNumber,oldPassword,newPassword));
+	}
+	
 }
