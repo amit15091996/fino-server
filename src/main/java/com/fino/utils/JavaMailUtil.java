@@ -34,20 +34,19 @@ public class JavaMailUtil {
 		thymContext.setVariable("userName", userName);
 		thymContext.setVariable("password",password);
 		try {
-			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "text/html; charset=utf-8");
 			mimeMessageHelper.setFrom(this.setFrom);
 			mimeMessageHelper.setTo(setTo);
 			mimeMessageHelper.setCc(this.setFrom);
 			mimeMessageHelper.setSubject(mailSubject);
-			emailSender.send(message);
 			mimeMessageHelper.setText(this.templateEngine.process("passwordSender.html", thymContext), true);
-
+			emailSender.send(message);
 			mailMap.put(AppConstants.statusCode, AppConstants.ok);
 			mailMap.put(AppConstants.status, AppConstants.success);
 			mailMap.put(AppConstants.statusMessage, AppConstants.passwordSentSuccessfully);
 
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 			throw new InternalServerError(e.getMessage());
 		}
 		return mailMap;
