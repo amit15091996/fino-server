@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RandomPasswordGenerator {
 
-    private  String doGeneratePassword(int passwordLength){
+    public  String doGeneratePassword(int passwordLength){
      SecureRandom secureRandom=new SecureRandom();
      String randomChaString="123456789@$#^&*()!~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
      String password="";

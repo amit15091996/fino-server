@@ -1,5 +1,6 @@
 package com.fino.controller;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ public class FinoAuthController {
 	@Autowired
 	private CustomAuthentication customAuthentication;
 
-	@Autowired
-	private JavaMailUtil javaMailUtil;
 
 	@PostMapping("/sign-up")
 	public ResponseEntity<Map<Object, Object>> userSignUp(@RequestBody @Valid FinoUserDetailsDto finoUserDetailsDto) {
@@ -45,12 +44,13 @@ public class FinoAuthController {
 		return ResponseEntity.ok(this.userService.onUserlogin(mobileNumber, password));
 	}
 
-
-
-	// @PostMapping("/send-mail")
-	// public ResponseEntity<Map<Object, Object>> sendMail() {
-	// 	return ResponseEntity.ok(this.javaMailUtil.sendTextMail());
-	// }
+	 @PostMapping("/forgot-password")
+	 public ResponseEntity<Map<Object, Object>> resetPasswordMail(
+			 @RequestParam(name = "mobileNumber", required = true) String mobileNumber,
+				@RequestParam(name = "dateOfBirth", required = true) LocalDate dateOfBirth
+			 ) {
+	 	return ResponseEntity.ok(this.userService.resetPassword(mobileNumber,dateOfBirth));
+	 }
 
 
 	private void finoAuthentication(String mobileNumber, String password) {
