@@ -76,6 +76,7 @@ public class AppConstants {
 	public static final String CLIENT_ROLE= "CLIENT";
 	public static final String CLIENT_ROLE_DESC= "This is CLIENT Role";
 	public static final String USER_NAME= "userName";
+	public static final String FULL_NAME= "fullName";
 	public static final String JWT_TOKEN= "jwtToken";
 	public static final String TOKEN_EXPIRATION_IN_MILIS= "tokenExpirationInMilis";
 	public static final String USER_ROLES= "userRoles";
