@@ -7,17 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fino.configuration.CustomAuthentication;
-import com.fino.dto.FinoUserDetailsDto;
 import com.fino.service.UserService;
-import com.fino.utils.JavaMailUtil;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/fino/system/auth")
@@ -30,11 +25,6 @@ public class FinoAuthController {
 	private CustomAuthentication customAuthentication;
 
 
-	@PostMapping("/sign-up")
-	public ResponseEntity<Map<Object, Object>> userSignUp(@RequestBody @Valid FinoUserDetailsDto finoUserDetailsDto) {
-
-		return ResponseEntity.ok(this.userService.insertFinoUserDetails(finoUserDetailsDto));
-	}
 
 	@PostMapping("/sign-in")
 	public ResponseEntity<Map<Object, Object>> userSignIn(
