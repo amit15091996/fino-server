@@ -91,8 +91,8 @@ public class UserServiceImplementation implements UserService {
 		userResponseMap.put(AppConstants.status, AppConstants.success);
 		userResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
 		userResponseMap.put(AppConstants.response, this.finoUserDetailsRepository.findAll().stream().map(user -> {
-			return new UserRecords(user.getFirstName(), user.getLastName(), user.getDateOfBirth(),
-					user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles(), user.isEnabled());
+			return new UserRecords(user.getFirstName()+" "+user.getLastName(), user.getDateOfBirth(),
+					user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles().stream().map(role->role.getRoleName()).collect(Collectors.toList()), user.isEnabled()?"ACTIVE":"INACTIVE");
 		}).collect(Collectors.toList()));
 
 		return userResponseMap;
@@ -113,6 +113,7 @@ public class UserServiceImplementation implements UserService {
 			if (finoUser != null) {
 				var jwtToken = this.jwtHelpers.generateToken(finoUser);
 				userLoginMap.put(AppConstants.USER_NAME, finoUser.getMobileNumber());
+				userLoginMap.put(AppConstants.FULL_NAME, finoUser.getFirstName()+" "+finoUser.getLastName());
 				userLoginMap.put(AppConstants.JWT_TOKEN, jwtToken);
 				userLoginMap.put(AppConstants.TOKEN_EXPIRATION_IN_MILIS,
 						this.jwtHelpers.getExpirationDateFromToken(jwtToken).toInstant().toEpochMilli());
