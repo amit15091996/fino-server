@@ -31,11 +31,11 @@ public class FinoOperationController {
     @Autowired
    	private CmsTransactionService cmsTransactionService;
     
-    @GetMapping("/get-all-bank-transaction")
+    @GetMapping("/get-all-bank-transaction/{mobileNumber}")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-    public ResponseEntity<Map<Object, Object>> getAllBankTransactions(){
+    public ResponseEntity<Map<Object, Object>> getAllBankTransactions(@PathVariable("mobileNumber")String mobileNumber){
     	
-    	return ResponseEntity.ok(this.bankTransactionService.getAllBankTransactionDetails());
+    	return ResponseEntity.ok(this.bankTransactionService.getAllBankTransactionDetails(mobileNumber));
     }
 
     @PostMapping("/insert-bank-transaction")
@@ -59,11 +59,11 @@ public class FinoOperationController {
     }
     
     
-    @GetMapping("/get-all-cms-transaction")
+    @GetMapping("/get-all-cms-transaction/{mobileNumber}")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-    public ResponseEntity<Map<Object, Object>> getAllCmsTransactions(){
+    public ResponseEntity<Map<Object, Object>> getAllCmsTransactions(@PathVariable("mobileNumber")String mobileNumber ){
     	
-    	return ResponseEntity.ok(this.cmsTransactionService.getAllCmsTransactionDetails());
+    	return ResponseEntity.ok(this.cmsTransactionService.getAllCmsTransactionDetails(mobileNumber));
     }
     
     @PostMapping("/insert-cms-transaction")

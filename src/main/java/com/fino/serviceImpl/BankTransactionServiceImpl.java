@@ -88,13 +88,13 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllBankTransactionDetails() {
+	public Map<Object, Object> getAllBankTransactionDetails(String mobileNumber) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
 
 		bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		bankResponseMap.put(AppConstants.status, AppConstants.success);
 		bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-		bankResponseMap.put(AppConstants.response, this.bankTransactionRepository.findAll());
+		bankResponseMap.put(AppConstants.response, this.bankTransactionRepository.findByCollectedBy(mobileNumber));
 
 		return bankResponseMap;
 	}
