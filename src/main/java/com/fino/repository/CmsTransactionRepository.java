@@ -1,13 +1,14 @@
 package com.fino.repository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import com.fino.entity.CmsTransactionDetails;
 
 import jakarta.transaction.Transactional;
@@ -16,6 +17,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface CmsTransactionRepository extends JpaRepository<CmsTransactionDetails, Long> {
 
+	List<CmsTransactionDetails> findByCollectedBy(String mobileNumber);
+	
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Query("UPDATE CmsTransactionDetails ctd  SET ctd.recievedFrom=:recievedFrom,"
 			+ "ctd.collectionAmount=:collectionAmount,"

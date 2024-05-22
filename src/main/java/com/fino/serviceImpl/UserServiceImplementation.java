@@ -31,7 +31,7 @@ public class UserServiceImplementation implements UserService {
 	@Autowired
 	private FinoUserDetailsRepository finoUserDetailsRepository;
 
-	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Autowired
 	private JwtHelpers jwtHelpers;
@@ -190,7 +190,7 @@ public class UserServiceImplementation implements UserService {
 			var newPassword = this.randomPasswordGenerator.doGeneratePassword(11);
 			Map<Object, Object> mailMap = null;
 			try {
-				mailMap = this.javaMailUtil.sendTextMail(finoUserDetails.getEmailId(), "Login Crendtials",
+				mailMap = this.javaMailUtil.sendTextMail(finoUserDetails.getEmailId(), "Login Credentials",
 						finoUserDetails.getFirstName() + " " + finoUserDetails.getLastName(), newPassword);
 				this.finoUserDetailsRepository.updateFinoUserPassword(this.passwordEncoder.encode(newPassword),
 						mobileNumber);

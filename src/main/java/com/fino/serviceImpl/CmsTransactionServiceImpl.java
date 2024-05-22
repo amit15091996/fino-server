@@ -88,13 +88,13 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllCmsTransactionDetails() {
+	public Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
 
 		cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		cmsResponseMap.put(AppConstants.status, AppConstants.success);
 		cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-		cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findAll());
+		cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findByCollectedBy(mobileNumber));
 		return cmsResponseMap;
 	}
 

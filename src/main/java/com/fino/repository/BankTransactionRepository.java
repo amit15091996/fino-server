@@ -1,6 +1,7 @@
 package com.fino.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,6 +17,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface BankTransactionRepository extends JpaRepository<BankTransactionDetails, Long> {
 
+	List<BankTransactionDetails> findByCollectedBy(String collectedBy);
+	
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Query("UPDATE BankTransactionDetails btd  SET btd.recievedFrom=:recievedFrom,"
 			+ "btd.collectionAmount=:collectionAmount,"
