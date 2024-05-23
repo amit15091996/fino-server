@@ -9,4 +9,5 @@ public interface CmsTransactionService {
 	Map<Object, Object> deleteCmsTransactionDetails(Long cmsTransactionId);
 	Map<Object, Object> updateCmsTransactionDetails(Long cmsTransactionId, TransactionDetailsDto transactionDetailsDto);
 	Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber);
+	Map<Object, Object> getAllCMSTransactionDetailsViaSerachParams(String year,String month,String fromDate,String toDate);
 }

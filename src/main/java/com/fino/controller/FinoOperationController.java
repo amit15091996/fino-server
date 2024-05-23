@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fino.dto.TransactionDetailsDto;
@@ -31,11 +32,11 @@ public class FinoOperationController {
     @Autowired
    	private CmsTransactionService cmsTransactionService;
     
-    @GetMapping("/get-all-bank-transaction/{mobileNumber}")
+    @GetMapping("/get-all-bank-transaction")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-    public ResponseEntity<Map<Object, Object>> getAllBankTransactions(@PathVariable("mobileNumber")String mobileNumber){
+    public ResponseEntity<Map<Object, Object>> getAllBankTransactions(@RequestParam(name = "mobileNumber",required = false)String mobileNumber,@RequestParam(name = "transactionType",required = false)String transactionType){
     	
-    	return ResponseEntity.ok(this.bankTransactionService.getAllBankTransactionDetails(mobileNumber));
+    	return ResponseEntity.ok(this.bankTransactionService.getAllBankTransactionDetails(mobileNumber,transactionType));
     }
 
     @PostMapping("/insert-bank-transaction")
@@ -86,5 +87,25 @@ public class FinoOperationController {
     	return ResponseEntity.ok(this.cmsTransactionService.updateCmsTransactionDetails(cmsTransactionId,transactionDetailsDto));
     }
     
+    
+    @GetMapping("/get-bank-transaction-by-dates")
+    @PreAuthorize(AuthorizationHelpers.USER_AUTH)
+	public ResponseEntity<Map<Object, Object>> getBankTransactionByDates(@RequestParam(name = "year",required = false) String year,
+			@RequestParam(name = "month",required = false) String month, @RequestParam(name = "fromDate",required = false) String fromDate,
+			@RequestParam(name = "toDate",required = false) String toDate) {
+
+		return ResponseEntity
+				.ok(this.bankTransactionService.getAllBankTransactionDetailsViaSerachParams(year, month, fromDate, toDate));
+	}
+    
+    @GetMapping("/get-cms-transaction-by-dates")
+    @PreAuthorize(AuthorizationHelpers.USER_AUTH)
+	public ResponseEntity<Map<Object, Object>> getCmsTransactionByDates(@RequestParam(name = "year",required = false) String year,
+			@RequestParam(name = "month",required = false) String month, @RequestParam(name = "fromDate",required = false) String fromDate,
+			@RequestParam(name = "toDate",required = false) String toDate) {
+
+		return ResponseEntity
+				.ok(this.cmsTransactionService.getAllCMSTransactionDetailsViaSerachParams(year, month, fromDate, toDate));
+	}
     
 }
