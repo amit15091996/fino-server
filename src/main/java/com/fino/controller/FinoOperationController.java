@@ -60,11 +60,11 @@ public class FinoOperationController {
     }
     
     
-    @GetMapping("/get-all-cms-transaction/{mobileNumber}")
+    @GetMapping("/get-all-cms-transaction")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-    public ResponseEntity<Map<Object, Object>> getAllCmsTransactions(@PathVariable("mobileNumber")String mobileNumber ){
+    public ResponseEntity<Map<Object, Object>> getAllCmsTransactions(@RequestParam(name = "mobileNumber",required = false)String mobileNumber,@RequestParam(name = "transactionType",required = false)String transactionType){
     	
-    	return ResponseEntity.ok(this.cmsTransactionService.getAllCmsTransactionDetails(mobileNumber));
+    	return ResponseEntity.ok(this.cmsTransactionService.getAllCmsTransactionDetails(mobileNumber,transactionType));
     }
     
     @PostMapping("/insert-cms-transaction")

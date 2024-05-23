@@ -95,7 +95,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Override
 	public Map<Object, Object> getAllBankTransactionDetails(String mobileNumber,String allTransaction) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
-    if(allTransaction.equalsIgnoreCase("ALL")) {
+    if(allTransaction !=null && allTransaction.equalsIgnoreCase("ALL")) {
     	bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		bankResponseMap.put(AppConstants.status, AppConstants.success);
 		bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
