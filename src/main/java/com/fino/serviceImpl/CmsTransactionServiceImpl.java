@@ -98,14 +98,25 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber) {
+	public Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber,String allTransaction) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
 
-		cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-		cmsResponseMap.put(AppConstants.status, AppConstants.success);
-		cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-		cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findByCollectedBy(mobileNumber));
-		return cmsResponseMap;
+		 if( allTransaction !=null && allTransaction.equalsIgnoreCase("ALL")) {
+			 cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findAll());
+				return cmsResponseMap;
+			 
+		 }else {
+			 cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findByCollectedBy(mobileNumber));
+				return cmsResponseMap;
+		 }
+		
+		
 	}
 
 	@Override
