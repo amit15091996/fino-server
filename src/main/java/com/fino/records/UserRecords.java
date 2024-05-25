@@ -6,7 +6,7 @@ import java.util.List;
 import com.fino.entity.FinoUserRoles;
 
 public record UserRecords(String userName,LocalDate dateOfBirth,String mobileNumber,
-		String emailId,List<String> userRoles,String isActive
+		String emailId,List<FinoUserRoles> userRoles,String isActive
 		) {
 
 }

@@ -37,15 +37,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "FINO_USERS_DETAILS")
 @Entity
-public class FinoUserDetails implements UserDetails  {
-	
+public class FinoUserDetails implements UserDetails {
+
 	private static final long serialVersionUID = 5360359571813027649L;
 
-	@TableGenerator(allocationSize = 1, initialValue =234567, name = "fino_user_sequence")
+	@TableGenerator(allocationSize = 1, initialValue = 234567, name = "fino_user_sequence")
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "fino_user_sequence")
 	private Long finoUserId;
-	
+
 	@Column(length = 50, nullable = false)
 	private String firstName;
 	@Column(length = 20, nullable = false)
@@ -55,43 +55,49 @@ public class FinoUserDetails implements UserDetails  {
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
-	@Column(length =1000, nullable = false)
+	@Column(length = 1000, nullable = false)
 	private String Password;
-	@Column(length = 10, nullable = false,unique = true)
+	@Column(length = 10, nullable = false, unique = true)
 	private String mobileNumber;
 	@Column(length = 50, nullable = false)
 	private String emailId;
-	
-	@OneToMany(mappedBy = "finoUserDetails",fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
+	@Column(columnDefinition = "BOOLEAN", nullable = false)
+	private boolean isActive;
+
+	@OneToMany(mappedBy = "finoUserDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<FinoUserRoles> finoUserRoles;
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.finoUserRoles.stream().map(role->new SimpleGrantedAuthority(role.getRoleName())).toList();
+		return this.finoUserRoles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).toList();
 	}
+
 	@Override
 	public String getUsername() {
-		
+
 		return this.mobileNumber;
 	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 		return false;
 	}
+
 	@Override
 	public boolean isAccountNonLocked() {
 		return false;
 	}
+
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return false;
 	}
+
 	@Override
 	public boolean isEnabled() {
-		
-		return true;
+
+		return this.isActive;
 	}
-	
 
 }

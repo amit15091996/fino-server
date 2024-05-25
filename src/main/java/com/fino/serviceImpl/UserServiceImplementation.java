@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.fino.configuration.JwtHelpers;
 import com.fino.dto.FinoUserDetailsDto;
+import com.fino.dto.FinoUserEdit;
 import com.fino.entity.FinoUserDetails;
 import com.fino.entity.FinoUserRoles;
 import com.fino.helpers.AppConstants;
@@ -50,13 +51,13 @@ public class UserServiceImplementation implements UserService {
 		Map<Object, Object> userSignUpMap = new HashMap<>();
 		var finoUserDetails = new FinoUserDetails();
 		var finoUserRoles = new FinoUserRoles();
-
 		try {
 			finoUserDetails.setDateOfBirth(finoUserDetailsDto.getDateOfBirth());
 			finoUserDetails.setEmailId(finoUserDetailsDto.getEmailId());
 			finoUserDetails.setFirstName(finoUserDetailsDto.getFirstName());
 			finoUserDetails.setLastName(finoUserDetailsDto.getLastName());
 			finoUserDetails.setMobileNumber(finoUserDetailsDto.getMobileNumber());
+			finoUserDetails.setActive(true);
 			finoUserDetails.setPassword(this.passwordEncoder.encode(finoUserDetailsDto.getPassword()));
 			finoUserRoles.setRoleName(finoUserDetailsDto.getUserRole());
 			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + " Role");
@@ -73,26 +74,14 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public Map<Object, Object> deleteFinoUserDetails(Long recieptId) {
-
-		return null;
-	}
-
-	@Override
-	public Map<Object, Object> updateFinoUserDetails(Long recieptId, FinoUserDetailsDto finoUserDetailsDto) {
-
-		return null;
-	}
-
-	@Override
 	public Map<Object, Object> getAllFinoUsersDetails() {
 		Map<Object, Object> userResponseMap = new HashMap<>();
 		userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		userResponseMap.put(AppConstants.status, AppConstants.success);
 		userResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-		userResponseMap.put(AppConstants.response, this.finoUserDetailsRepository.findAll().stream().map(user -> {
+		userResponseMap.put(AppConstants.response, this.finoUserDetailsRepository.getAllActiveUser().stream().map(user -> {
 			return new UserRecords(user.getFirstName()+" "+user.getLastName(), user.getDateOfBirth(),
-					user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles().stream().map(role->role.getRoleName()).collect(Collectors.toList()), user.isEnabled()?"ACTIVE":"INACTIVE");
+					user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles(), user.isEnabled()?"ACTIVE":"INACTIVE");
 		}).collect(Collectors.toList()));
 
 		return userResponseMap;
@@ -170,7 +159,10 @@ public class UserServiceImplementation implements UserService {
 	public Map<Object, Object> deletePreviousAssignedRole(Long roleId) {
 		Map<Object, Object> userResponseMap = new HashMap<>();
 		if (this.finoUserRolesRepository.findById(roleId).isPresent()) {
-			this.finoUserRolesRepository.deleteById(roleId);
+			try {
+				this.finoUserRolesRepository.deleteById(roleId);
+			} catch (Exception e) {throw new InternalServerError(e.getMessage());}
+		
 			userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			userResponseMap.put(AppConstants.status, AppConstants.success);
 			userResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
@@ -227,8 +219,46 @@ public class UserServiceImplementation implements UserService {
 		else {
 			throw new BadRequest("Password didn't match please check your old password and try again...");
 		}
-		
-	
+	}
+
+	@Override
+	public Map<Object, Object> deleteFinoUserDetails(String mobileNumber) {
+		Map<Object, Object> userResponseMap = new HashMap<>();
+
+		if (this.finoUserDetailsRepository.findByMobileNumber(mobileNumber) !=null) {
+			try{
+			this.finoUserDetailsRepository.updateFinoUserStatus(false, mobileNumber);
+			}catch(Exception e){throw new InternalServerError(e.getMessage());}
+			userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+			userResponseMap.put(AppConstants.status, AppConstants.success);
+			userResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + mobileNumber);
+		}
+
+		return userResponseMap;
+	}
+
+	@Override
+	public Map<Object, Object> updateFinoUserDetails(String mobileNumber, FinoUserEdit finoUserEdit) {
+		Map<Object, Object> userResponseMap = new HashMap<>();
+
+		if (this.finoUserDetailsRepository.findByMobileNumber(mobileNumber)!=null) {
+			try {
+				this.finoUserDetailsRepository.updateFinoUserDetails(finoUserEdit.getFirstName(),finoUserEdit.getLastName(),finoUserEdit.getDateOfBirth(),finoUserEdit.getEmailId(),mobileNumber);
+						userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+						userResponseMap.put(AppConstants.status, AppConstants.success);
+						userResponseMap.put(AppConstants.statusMessage,
+						AppConstants.recordUpdatedSuccessFully + mobileNumber);
+
+			} catch (Exception e) {
+				throw new BadRequest(e.getMessage());
+			}
+
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + mobileNumber);
+		}
+		return userResponseMap;
 	}
 
 }
