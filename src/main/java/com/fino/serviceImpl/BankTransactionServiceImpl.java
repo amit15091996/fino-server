@@ -113,12 +113,12 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllBankTransactionDetailsViaSerachParams(String year, String month,
+	public Map<Object, Object> getAllBankTransactionDetailsViaSerachParams(String mobileNumber,String year, String month,
 			String fromDate, String toDate) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
 
 		if (year != null) {
-			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository.findAll();
+			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository.findByCollectedBy(mobileNumber);
 			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			bankResponseMap.put(AppConstants.status, AppConstants.success);
 			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
@@ -128,7 +128,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		}
 
 		else if (month != null) {
-			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository.findAll();
+			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository.findByCollectedBy(mobileNumber);
 			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			bankResponseMap.put(AppConstants.status, AppConstants.success);
 			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
@@ -138,7 +138,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		}
 
 		else if (fromDate != null && toDate != null) {
-			List<BankTransactionDetails> bankDepositByDate = this.bankTransactionRepository.findAll();
+			List<BankTransactionDetails> bankDepositByDate = this.bankTransactionRepository.findByCollectedBy(mobileNumber);
 			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			bankResponseMap.put(AppConstants.status, AppConstants.success);
 			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);

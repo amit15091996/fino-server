@@ -9,5 +9,5 @@ public interface BankTransactionService {
 	Map<Object, Object> deleteBankTransactionDetails(Long bankTransactionId);
 	Map<Object, Object> updateBankTransactionDetails(Long bankTransactionId, TransactionDetailsDto transactionDetailsDto);
 	Map<Object, Object> getAllBankTransactionDetails(String mobileNumber,String allTransaction);
-	Map<Object, Object> getAllBankTransactionDetailsViaSerachParams(String year,String month,String fromDate,String toDate);
+	Map<Object, Object> getAllBankTransactionDetailsViaSerachParams(String mobileNumber,String year,String month,String fromDate,String toDate);
 }
