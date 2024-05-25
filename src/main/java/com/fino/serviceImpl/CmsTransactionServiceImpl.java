@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fino.dto.TransactionDetailsDto;
-import com.fino.entity.BankTransactionDetails;
 import com.fino.entity.CmsTransactionDetails;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.CmsTransactionRepository;
@@ -120,12 +119,12 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllCMSTransactionDetailsViaSerachParams(String year, String month, String fromDate,
+	public Map<Object, Object> getAllCMSTransactionDetailsViaSerachParams(String mobileNumber,String year, String month, String fromDate,
 			String toDate) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
 
 		if (year != null) {
-			List<CmsTransactionDetails> cmsDepositByYear = this.cmsTransactionRepository.findAll();
+			List<CmsTransactionDetails> cmsDepositByYear = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
 			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			cmsResponseMap.put(AppConstants.status, AppConstants.success);
 			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
@@ -135,7 +134,7 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 		}
 
 		else if (month != null) {
-			List<CmsTransactionDetails> cmsDepositByMonth = this.cmsTransactionRepository.findAll();
+			List<CmsTransactionDetails> cmsDepositByMonth = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
 			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			cmsResponseMap.put(AppConstants.status, AppConstants.success);
 			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
@@ -145,7 +144,7 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 		}
 
 		else if (fromDate != null && toDate != null) {
-			List<CmsTransactionDetails> cmsDepositByDates = this.cmsTransactionRepository.findAll();
+			List<CmsTransactionDetails> cmsDepositByDates = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
 			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			cmsResponseMap.put(AppConstants.status, AppConstants.success);
 			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);

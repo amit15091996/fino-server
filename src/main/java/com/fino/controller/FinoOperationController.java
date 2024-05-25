@@ -90,22 +90,22 @@ public class FinoOperationController {
     
     @GetMapping("/get-bank-transaction-by-dates")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-	public ResponseEntity<Map<Object, Object>> getBankTransactionByDates(@RequestParam(name = "year",required = false) String year,
+	public ResponseEntity<Map<Object, Object>> getBankTransactionByDates(@RequestParam(name = "mobileNumber",required = false)String mobileNumber,@RequestParam(name = "year",required = false) String year,
 			@RequestParam(name = "month",required = false) String month, @RequestParam(name = "fromDate",required = false) String fromDate,
 			@RequestParam(name = "toDate",required = false) String toDate) {
 
 		return ResponseEntity
-				.ok(this.bankTransactionService.getAllBankTransactionDetailsViaSerachParams(year, month, fromDate, toDate));
+				.ok(this.bankTransactionService.getAllBankTransactionDetailsViaSerachParams(mobileNumber,year, month, fromDate, toDate));
 	}
     
     @GetMapping("/get-cms-transaction-by-dates")
     @PreAuthorize(AuthorizationHelpers.USER_AUTH)
-	public ResponseEntity<Map<Object, Object>> getCmsTransactionByDates(@RequestParam(name = "year",required = false) String year,
+	public ResponseEntity<Map<Object, Object>> getCmsTransactionByDates(@RequestParam(name = "mobileNumber",required = false)String mobileNumber,@RequestParam(name = "year",required = false) String year,
 			@RequestParam(name = "month",required = false) String month, @RequestParam(name = "fromDate",required = false) String fromDate,
 			@RequestParam(name = "toDate",required = false) String toDate) {
 
 		return ResponseEntity
-				.ok(this.cmsTransactionService.getAllCMSTransactionDetailsViaSerachParams(year, month, fromDate, toDate));
+				.ok(this.cmsTransactionService.getAllCMSTransactionDetailsViaSerachParams(mobileNumber,year, month, fromDate, toDate));
 	}
     
 }
