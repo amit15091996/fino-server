@@ -1,6 +1,9 @@
 server:
   port: 8099
-
+  tomcat:
+   relaxed-query-chars: "<,>,[,\\,],^,`,{,|,},:,-"
+   relaxed-path-chars:  "<,>,[,\\,],^,`,{,|,},:,-"
+    
 spring:
   application:
     name: inventory

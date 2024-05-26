@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fino.dto.FinoUserDetailsDto;
+import com.fino.dto.FinoUserEdit;
 import com.fino.helpers.AuthorizationHelpers;
 import com.fino.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/fino/system/user")
@@ -59,6 +62,20 @@ public class FinoUserOperationController {
 			@RequestParam(name = "newPassword",required = true) String newPassword
 			) {
 		return ResponseEntity.ok(this.userService.changePassword(mobileNumber,oldPassword,newPassword));
+	}
+
+	@DeleteMapping("/disable-an-user")
+	@PreAuthorize(AuthorizationHelpers.ADMIN_AUTH)
+	public ResponseEntity<Map<Object, Object>> disableAnUser(@RequestParam(name = "mobileNumber",required = true) String mobileNumber) {
+		return ResponseEntity.ok(this.userService.deleteFinoUserDetails(mobileNumber));
+	}
+	
+	
+	@PutMapping("/update-fino-user")
+	@PreAuthorize(AuthorizationHelpers.ADMIN_AUTH)
+	public ResponseEntity<Map<Object, Object>> updateAnUser(@RequestParam(name = "mobileNumber",required = true) String mobileNumber,@RequestBody FinoUserEdit finouserEdit) {
+		System.out.println(finouserEdit);
+		return ResponseEntity.ok(this.userService.updateFinoUserDetails(mobileNumber,finouserEdit));
 	}
 	
 }
