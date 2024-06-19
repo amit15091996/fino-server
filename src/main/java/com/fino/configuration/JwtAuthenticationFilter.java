@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private List<String> skipUrls = Arrays.asList("/fino/system/auth/**");
 	
 	
+	@SuppressWarnings("null")
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		
@@ -50,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	
 
+	@SuppressWarnings("null")
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {

@@ -17,21 +17,17 @@ import jakarta.transaction.Transactional;
 @Transactional
 public interface BankTransactionRepository extends JpaRepository<BankTransactionDetails, Long> {
 
-	List<BankTransactionDetails> findByCollectedBy(String collectedBy);
+	List<BankTransactionDetails> findBydepositedBy(String depositedBy);
 	
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
-	@Query("UPDATE BankTransactionDetails btd  SET btd.recievedFrom=:recievedFrom,"
+	@Query("UPDATE BankTransactionDetails btd  SET btd.depositedInBank=:depositedInBank,"
 			+ "btd.collectionAmount=:collectionAmount,"
 			+ "btd.bankTransactionDate=:bankTransactionDate,"
-			+ "btd.onlineAmount=:onlineAmount,"
-			+ "btd.balanceAmount=:balanceAmount,"
 			+ "btd.remarks=:remarks,"
 			+ "btd.cashAmount=:cashAmount WHERE btd.bankTransactionId=:bankTransactionId")
-	public void updateBankTransactionDetals(@Param("recievedFrom") String recievedFrom,
+	public void updateBankTransactionDetals(@Param("depositedInBank") String depositedInBank,
 			@Param("collectionAmount") double collectionAmount,
 			@Param("bankTransactionDate") LocalDate bankTransactionDate,
-			@Param("onlineAmount") double onlineAmount,
-			@Param("balanceAmount") double balanceAmount,
 			@Param("cashAmount") double cashAmount, 
 			@Param("remarks") String remarks,
 			@Param("bankTransactionId") Long bankTransactionId);
