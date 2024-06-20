@@ -33,9 +33,9 @@ public class BankTransactionDetails {
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "bank_transaction_sequence")
 	private Long bankTransactionId;
 	@Column(length = 50, nullable = false)
-	private String recievedFrom;
+	private String depositedInBank;
 	@Column(length = 50, nullable = false)
-	private String collectedBy;
+	private String depositedBy;
 	@Column(columnDefinition = "Decimal(20,2)")
 	private double collectionAmount;
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
@@ -44,11 +44,7 @@ public class BankTransactionDetails {
 	@Column(nullable = false)
 	private LocalDate bankTransactionDate;
 	@Column(columnDefinition = "Decimal(20,2)")
-	private double onlineAmount;
-	@Column(columnDefinition = "Decimal(20,2)")
 	private double cashAmount;
-	@Column(columnDefinition = "Decimal(20,2)")
-	private double balanceAmount;
-	@Column(length =5000, nullable = false)
+	@Column(length =5000)
 	private String remarks;
 }

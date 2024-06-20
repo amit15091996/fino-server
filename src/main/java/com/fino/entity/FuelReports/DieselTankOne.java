@@ -1,12 +1,15 @@
 package com.fino.entity.FuelReports;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 import jakarta.persistence.Column;
@@ -21,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,19 +36,63 @@ public class DieselTankOne extends FuelTesting {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "fino_diesel_tank_one_sequence")
     private Long dieselTankOneId;
-    private String inwardOfDieselTankOne;
-    private String dipOfDieselTankOne;
-    private String actualSaleOfDieselTankOne;
-    private String closingReadingOfNozzleOne;
-    private String closingReadingOfNozzleTwo;
-    private String closingReadingOfNozzleThree;
-    private String closingReadingOfNozzleFour;
-
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @Column(nullable = false)
-    private LocalDate dieselTankOneDate;
-  
+    private LocalDate HsdTankOneDate;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double openingStockOfHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double inwardOfHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double totalStockHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double totalSalesHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double closingStockHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double dipStockOfHsdTankOne;
+    @Column(columnDefinition = "Decimal(10,2)")
+    private Double variationOfHsdTankOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double dipOfHsdTankOneInCentimeter;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double dipOfHsdTankOneInLtrs;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double openingMeterOfHsdTankOneNozzleOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double closingMeterOfHsdTankOneNozzleOne;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double openingMeterOfHsdTankOneNozzleTwo;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double closingMeterOfHsdTankOneNozzleTwo;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double openingMeterOfHsdTankOneNozzleThree;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double closingMeterOfHsdTankOneNozzleThree;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double openingMeterOfHsdTankOneNozzleFour;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double closingMeterOfHsdTankOneNozzleFour;
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double salesForHsdTankOneNozzleOne;
+
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double salesForHsdTankOneNozzleTwo;
+
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double salesForHsdTankOneNozzleThree;
+
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double salesForHsdTankOneNozzleFour;
+
+    @Column(columnDefinition = "Decimal(20,2)")
+    private Double totalSalesForTheDayHsdTankOne;
+    @JsonFormat(shape = Shape.STRING)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(nullable = false)
+    private LocalDateTime HsdTankOneInsertDateTime;
 
 }
