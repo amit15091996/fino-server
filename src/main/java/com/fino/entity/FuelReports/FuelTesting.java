@@ -14,11 +14,11 @@ import lombok.Setter;
 @MappedSuperclass
 public class FuelTesting {
     @Column(columnDefinition = "Decimal(20,2)")
-    public String testing;
+    public Double  testing;
     @Column(columnDefinition = "Decimal(20,2)")
-    public String density;
+    public Double density;
     @Column(columnDefinition = "Decimal(20,2)")
-    public String waterDip;
+    public Double waterDip;
     @Column(length = 5000)
     public String remarks;
 }

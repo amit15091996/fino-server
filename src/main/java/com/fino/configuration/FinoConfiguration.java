@@ -80,6 +80,7 @@ public class FinoConfiguration {
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						.requestMatchers("/fino/system/operation/**").authenticated()
 						.requestMatchers("/fino/system/user/**").authenticated()
+						.requestMatchers("/fino/system/fuel-report/**").authenticated()
 						.requestMatchers("/fino/system/auth/**").permitAll()
 
 				)

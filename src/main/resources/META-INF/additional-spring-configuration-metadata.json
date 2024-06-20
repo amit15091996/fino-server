@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "mssale.mssaleinitialvalue.opening-stock",
+    "type": "java.lang.String",
+    "description": "A description for 'mssale.mssaleinitialvalue.opening-stock'"
+  },
+  {
+    "name": "mssale.mssaleinitialvalue.nozzleOneReading",
+    "type": "java.lang.String",
+    "description": "A description for 'mssale.mssaleinitialvalue.nozzleOneReading'"
+  },
+  {
+    "name": "mssale.mssaleinitialvalue.nozzleTwoReading",
+    "type": "java.lang.String",
+    "description": "A description for 'mssale.mssaleinitialvalue.nozzleTwoReading'"
+  },
+  {
+    "name": "hsdtanktwo.hsdtanktwoinitialvalue.opening-stock",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtanktwo.hsdtanktwoinitialvalue.opening-stock'"
+  },
+  {
+    "name": "hsdtanktwo.hsdtanktwoinitialvalue.nozzleOneReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtanktwo.hsdtanktwoinitialvalue.nozzleOneReading'"
+  },
+  {
+    "name": "hsdtanktwo.hsdtanktwoinitialvalue.nozzleTwoReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtanktwo.hsdtanktwoinitialvalue.nozzleTwoReading'"
+  }
+]}
