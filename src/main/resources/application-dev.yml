@@ -1,9 +1,12 @@
 server:
-  port: 8098
-
+  port: 8097
+  tomcat:
+   relaxed-query-chars: "<,>,[,\\,],^,`,{,|,},:,-"
+   relaxed-path-chars:  "<,>,[,\\,],^,`,{,|,},:,-"
+    
 spring:
   application:
-    name: inventory
+    name: FINO
   datasource:
     url: jdbc:mysql://localhost:3306/finoclient
     name: finoclient
@@ -13,7 +16,7 @@ spring:
     
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       
     show-sql: true
     
@@ -22,6 +25,28 @@ spring:
       enabled: true
       max-file-size: -1
       max-request-size: -1
-        
+            
+      
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pandapriyabrat0707@gmail.com
+    password: qvay kexr mcjj fyag
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: false
+
+      
+
+                
+
+      
+             
         
       

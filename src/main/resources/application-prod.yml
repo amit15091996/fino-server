@@ -6,7 +6,7 @@ server:
     
 spring:
   application:
-    name: inventory
+    name: FINO
   datasource:
     url: jdbc:mysql://localhost:3306/finoclient
     name: finoclient
@@ -16,7 +16,7 @@ spring:
     
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       
     show-sql: true
     
@@ -42,8 +42,17 @@ spring:
             enable: true
             required: false
 
-      
+mssale:
+  mssaleinitialvalue:
+     "openingStock": 15558
+     "nozzleOneReading": 148260
+     "nozzleTwoReading": 167295
 
+hsdtanktwo:
+ hsdtanktwoinitialvalue:
+     "openingStock": 9680
+     "nozzleOneReading": 613977
+     "nozzleTwoReading": 698945
                 
 
       

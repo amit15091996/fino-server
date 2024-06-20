@@ -94,5 +94,7 @@ public class DieselTankOne extends FuelTesting {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(nullable = false)
     private LocalDateTime HsdTankOneInsertDateTime;
+    @Column(columnDefinition = "BOOLEAN", nullable = false)
+	private boolean isHsdTankOneAddedForDay;
 
 }

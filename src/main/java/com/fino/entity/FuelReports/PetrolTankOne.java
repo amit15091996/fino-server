@@ -56,9 +56,9 @@ public class PetrolTankOne extends FuelTesting {
     @Column(columnDefinition = "Decimal(10,2)")
     private Double variationOfMSSale;
     @Column(columnDefinition = "Decimal(20,2)")
-    private Double dipOfMSSaleInCentimeter;
+    private Double dipStockOfMSSaleInCentimeter;
     @Column(columnDefinition = "Decimal(20,2)")
-    private Double dipOfMSSaleInLtrs;
+    private Double dipStockOfMSSaleInLtrs;
     @Column(columnDefinition = "Decimal(20,2)")
     private Double openingMeterOfMSSaleNozzleOne;
     @Column(columnDefinition = "Decimal(20,2)")
@@ -72,10 +72,12 @@ public class PetrolTankOne extends FuelTesting {
     @Column(columnDefinition = "Decimal(20,2)")
     private Double salesForMSSaleNozzleTwo;
     @Column(columnDefinition = "Decimal(20,2)")
-    private Double totalSalesForTheDayMSSale;
+    private Double totalMeterSalesForTheDayForMSSaleInLtrs;
     @JsonFormat(shape = Shape.STRING)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(nullable = false)
     private LocalDateTime MSSaleInsertDateTime;
+    @Column(columnDefinition = "BOOLEAN", nullable = false)
+	private boolean isMSSaleAddedForDay;
 }
