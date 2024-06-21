@@ -80,5 +80,13 @@ public class AppConstants {
 	public static final String JWT_TOKEN= "jwtToken";
 	public static final String TOKEN_EXPIRATION_IN_MILIS= "tokenExpirationInMilis";
 	public static final String USER_ROLES= "userRoles";
+	public static final String OPENING_STOCK= "openingStock";
+	public static final String NOZZLE_ONE_READING= "nozzleOneReading";
+	public static final String NOZZLE_TWO_READING= "nozzleTwoReading";
+	public static final String NOZZLE_THREE_READING= "nozzleThreeReading";
+	public static final String NOZZLE_FOUR_READING= "nozzleFourReading";
+	
+	
+	
 
 }
