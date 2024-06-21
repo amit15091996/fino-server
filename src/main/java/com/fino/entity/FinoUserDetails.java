@@ -62,7 +62,9 @@ public class FinoUserDetails implements UserDetails {
 	private String emailId;
 	@Column(columnDefinition = "BOOLEAN", nullable = false)
 	private boolean isActive;
-
+	@Column(length = 200,unique = true)
+	private String registeredClientName;
+	
 	@OneToMany(mappedBy = "finoUserDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<FinoUserRoles> finoUserRoles;

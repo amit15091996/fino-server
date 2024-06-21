@@ -13,6 +13,7 @@ import com.fino.configuration.FuelReportConfig.MsSaleInitialData;
 import com.fino.dto.FuelReports.MsSaleDto;
 import com.fino.entity.FuelReports.PetrolTankOne;
 import com.fino.exception.BadRequest;
+import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.PetrolTankOneRepository;
 import com.fino.service.FuelReports.MsSaleService;
@@ -74,8 +75,15 @@ public class MsSaleServiceImpl implements MsSaleService {
     @Override
     public Map<Object, Object> deleteMsSaleDetails(Long msSaleId) {
         Map<Object, Object> msSaleResponseMap = new HashMap<>();
-
-        return msSaleResponseMap;
+		if (this.petrolTankOneRepository.findById(msSaleId).isPresent()) {
+			this.petrolTankOneRepository.deleteById(msSaleId);
+			msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+			msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+			msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
+		}
+		return msSaleResponseMap;
     }
 
     @Override

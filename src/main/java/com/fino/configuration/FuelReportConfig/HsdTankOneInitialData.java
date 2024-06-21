@@ -6,13 +6,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Configuration
-@ConfigurationProperties("hsdtankone")
+@ConfigurationProperties("hsdtanktwo")
 @Getter
 @Setter
 @Component
-public class HsdTankTwoInitialData {
-private Map<String, String> hsdtanktwoinitialvalue;
+public class HsdTankOneInitialData {
+	private Map<String, String> hsdtankoneinitialvalue;
 }

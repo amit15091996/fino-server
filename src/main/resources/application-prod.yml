@@ -16,7 +16,7 @@ spring:
     
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       
     show-sql: true
     
@@ -54,7 +54,13 @@ hsdtanktwo:
      "nozzleOneReading": 613977
      "nozzleTwoReading": 698945
                 
-
+hsdtankone:
+ hsdtankoneinitialvalue:
+     "openingStock": 13484
+     "nozzleOneReading":  889084
+     "nozzleTwoReading": 556115
+     "nozzleThreeReading": 134027
+     "nozzleFourReading": 132108
       
              
         
