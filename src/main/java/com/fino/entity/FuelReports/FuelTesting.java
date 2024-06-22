@@ -13,11 +13,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @MappedSuperclass
 public class FuelTesting {
-    @Column(columnDefinition = "Decimal(20,2)")
+    @Column(columnDefinition = "Decimal(20,2) default '0.00'")
     public Double  testing;
-    @Column(columnDefinition = "Decimal(20,2)")
+    @Column(columnDefinition = "Decimal(20,2) default '0.00'")
     public Double density;
-    @Column(columnDefinition = "Decimal(20,2)")
+    @Column(columnDefinition = "Decimal(20,2) default '0.00'")
     public Double waterDip;
     @Column(length = 5000)
     public String remarks;

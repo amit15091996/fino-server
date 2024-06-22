@@ -40,7 +40,7 @@ public class PetrolTankOne extends FuelTesting {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @Column(nullable = false)
-    private LocalDate MSSaleDate;
+    private LocalDate msSaleDate;
     @Column(columnDefinition = "Decimal(20,2)")
     private Double openingStockOfMSSale;
     @Column(columnDefinition = "Decimal(20,2)")
@@ -77,7 +77,7 @@ public class PetrolTankOne extends FuelTesting {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(nullable = false)
-    private LocalDateTime MSSaleInsertDateTime;
+    private LocalDateTime msSaleInsertDateTime;
     @Column(columnDefinition = "BOOLEAN", nullable = false)
 	private boolean isMSSaleAddedForDay;
 }

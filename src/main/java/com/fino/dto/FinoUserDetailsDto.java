@@ -39,5 +39,6 @@ public class FinoUserDetailsDto {
 	private String emailId;
 	@NotBlank(message = "Please enter your User Role(Mandatory)")
 	private String userRole;
+	private String registeredClientName;
 
 }

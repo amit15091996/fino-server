@@ -31,6 +31,8 @@ public class ClientDetails {
     private String clientName;
     @Column(length = 200)
     private String bankName;
+    @Column(columnDefinition = "BOOLEAN", nullable = false)
+	private boolean isClientActive;
     @OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recievedFrom", referencedColumnName = "clientName")
     private List<CmsTransactionDetails> cmsTransactionDetails;

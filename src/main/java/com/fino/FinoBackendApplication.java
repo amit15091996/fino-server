@@ -9,6 +9,8 @@ public class FinoBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FinoBackendApplication.class, args);
 		
+		
+		
 	}
 
 }
