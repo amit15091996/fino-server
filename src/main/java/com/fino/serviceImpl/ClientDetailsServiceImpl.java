@@ -2,6 +2,8 @@ package com.fino.serviceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fino.dto.ClientDetailsDto;
@@ -9,6 +11,7 @@ import com.fino.entity.ClientDetails;
 import com.fino.exception.BadRequest;
 import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
+import com.fino.records.ClientRecord;
 import com.fino.repository.ClientDetailsRepository;
 import com.fino.service.ClientDetailsService;
 
@@ -24,7 +27,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
         var clientDetails = new ClientDetails();
         clientDetails.setBankName(clientDetailsDto.getBankName());
         clientDetails.setClientName(clientDetailsDto.getClientName());
-
+        clientDetails.setClientActive(Boolean.TRUE);
         try {
             var clientDetailsResponse = this.clientDetailsRepository.save(clientDetails);
             if (clientDetailsResponse != null) {
@@ -58,7 +61,15 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
         clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
         clientResponseMap.put(AppConstants.status, AppConstants.success);
         clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-        clientResponseMap.put(AppConstants.response, this.clientDetailsRepository.findAll());
+        clientResponseMap.put(AppConstants.response, this.clientDetailsRepository.getAllActiveClients().stream().map((clientList)->{
+        	return new ClientRecord(
+        			clientList.getClientId(),
+        			clientList.getClientName(),
+        			clientList.getBankName(),
+        			clientList.getCmsTransactionDetails(),
+        			clientList.getFinoUserDetails()!=null?clientList.getFinoUserDetails().getMobileNumber():null
+        			);
+        }).collect(Collectors.toList()));
         return clientResponseMap;
     }
 

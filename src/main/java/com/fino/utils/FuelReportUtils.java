@@ -23,7 +23,7 @@ public class FuelReportUtils {
 
 	public PetrolTankOne msSaleDetailsIfNoDataAvailable(MsSaleDto msSaleDto, Map<String, String> mssaleInitialValue) {
 		var petrolTankOne = new PetrolTankOne();
-		petrolTankOne.setMSSaleDate(msSaleDto.getMsSaleDate());
+		petrolTankOne.setMsSaleDate(msSaleDto.getMsSaleDate());
 		petrolTankOne.setOpeningStockOfMSSale(Double.parseDouble(mssaleInitialValue.get(AppConstants.OPENING_STOCK)));
 		petrolTankOne.setInwardOfMSSale(msSaleDto.getInwardOfMSSale());
 		petrolTankOne.setTotalStockMSSale(
@@ -73,7 +73,7 @@ public class FuelReportUtils {
 		petrolTankOne.setWaterDip(msSaleDto.getWaterDip());
 		petrolTankOne.setRemarks(msSaleDto.getRemarks());
 		petrolTankOne.setMSSaleAddedForDay(Boolean.TRUE);
-		petrolTankOne.setMSSaleInsertDateTime(LocalDateTime.now());
+		petrolTankOne.setMsSaleInsertDateTime(LocalDateTime.now());
 
 		return petrolTankOne;
 	}
@@ -81,7 +81,7 @@ public class FuelReportUtils {
 	public PetrolTankOne msSaleDetailsIfPreviousDayDataAvailable(MsSaleDto msSaleDto, PetrolTankOne previousDayMssale) {
 
 		var petrolTankOne = new PetrolTankOne();
-		petrolTankOne.setMSSaleDate(msSaleDto.getMsSaleDate());
+		petrolTankOne.setMsSaleDate(msSaleDto.getMsSaleDate());
 		petrolTankOne.setOpeningStockOfMSSale(previousDayMssale.getDipStockOfMSSale());
 		petrolTankOne.setInwardOfMSSale(msSaleDto.getInwardOfMSSale());
 		petrolTankOne.setTotalStockMSSale(previousDayMssale.getDipStockOfMSSale() + msSaleDto.getInwardOfMSSale());
@@ -126,7 +126,7 @@ public class FuelReportUtils {
 		petrolTankOne.setWaterDip(msSaleDto.getWaterDip());
 		petrolTankOne.setRemarks(msSaleDto.getRemarks());
 		petrolTankOne.setMSSaleAddedForDay(Boolean.TRUE);
-		petrolTankOne.setMSSaleInsertDateTime(LocalDateTime.now());
+		petrolTankOne.setMsSaleInsertDateTime(LocalDateTime.now());
 
 		return petrolTankOne;
 	}

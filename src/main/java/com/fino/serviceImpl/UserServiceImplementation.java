@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import com.fino.configuration.JwtHelpers;
 import com.fino.dto.FinoUserDetailsDto;
 import com.fino.dto.FinoUserEdit;
+import com.fino.entity.ClientDetails;
 import com.fino.entity.FinoUserDetails;
 import com.fino.entity.FinoUserRoles;
 import com.fino.helpers.AppConstants;
 import com.fino.records.UserRecords;
+import com.fino.repository.ClientDetailsRepository;
 import com.fino.repository.FinoUserDetailsRepository;
 import com.fino.repository.FinoUserRolesRepository;
 import com.fino.service.UserService;
@@ -46,11 +48,15 @@ public class UserServiceImplementation implements UserService {
 	@Autowired
 	private RandomPasswordGenerator randomPasswordGenerator;
 
+	@Autowired
+	private ClientDetailsRepository clientDetailsRepository;
+
 	@Override
 	public Map<Object, Object> insertFinoUserDetails(FinoUserDetailsDto finoUserDetailsDto) {
 		Map<Object, Object> userSignUpMap = new HashMap<>();
 		var finoUserDetails = new FinoUserDetails();
 		var finoUserRoles = new FinoUserRoles();
+		var clientDetails=new ClientDetails();
 		try {
 			finoUserDetails.setDateOfBirth(finoUserDetailsDto.getDateOfBirth());
 			finoUserDetails.setEmailId(finoUserDetailsDto.getEmailId());
@@ -59,11 +65,17 @@ public class UserServiceImplementation implements UserService {
 			finoUserDetails.setMobileNumber(finoUserDetailsDto.getMobileNumber());
 			finoUserDetails.setActive(true);
 			finoUserDetails.setPassword(this.passwordEncoder.encode(finoUserDetailsDto.getPassword()));
+			finoUserDetails.setRegisteredClientName(finoUserDetailsDto.getRegisteredClientName());
 			finoUserRoles.setRoleName(finoUserDetailsDto.getUserRole());
 			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + " Role");
 			finoUserRoles.setFinoUserDetails(finoUserDetails);
 			finoUserDetails.setFinoUserRoles(Arrays.asList(finoUserRoles));
+			clientDetails.setClientName(finoUserDetailsDto.getRegisteredClientName());
+			clientDetails.setFinoUserDetails(finoUserDetails);
+			
 			this.finoUserDetailsRepository.save(finoUserDetails);
+			this.clientDetailsRepository.save(clientDetails);
+			
 			userSignUpMap.put(AppConstants.status, AppConstants.success);
 			userSignUpMap.put(AppConstants.statusCode, AppConstants.ok);
 			userSignUpMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
@@ -79,10 +91,12 @@ public class UserServiceImplementation implements UserService {
 		userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		userResponseMap.put(AppConstants.status, AppConstants.success);
 		userResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-		userResponseMap.put(AppConstants.response, this.finoUserDetailsRepository.getAllActiveUser().stream().map(user -> {
-			return new UserRecords(user.getFirstName()+" "+user.getLastName(), user.getDateOfBirth(),
-					user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles(), user.isEnabled()?"ACTIVE":"INACTIVE");
-		}).collect(Collectors.toList()));
+		userResponseMap.put(AppConstants.response,
+				this.finoUserDetailsRepository.getAllActiveUser().stream().map(user -> {
+					return new UserRecords(user.getFirstName() + " " + user.getLastName(), user.getDateOfBirth(),
+							user.getMobileNumber(), user.getEmailId(), user.getFinoUserRoles(),
+							user.isEnabled() ? "ACTIVE" : "INACTIVE");
+				}).collect(Collectors.toList()));
 
 		return userResponseMap;
 
@@ -102,11 +116,12 @@ public class UserServiceImplementation implements UserService {
 			if (finoUser != null) {
 				var jwtToken = this.jwtHelpers.generateToken(finoUser);
 				userLoginMap.put(AppConstants.USER_NAME, finoUser.getMobileNumber());
-				userLoginMap.put(AppConstants.FULL_NAME, finoUser.getFirstName()+" "+finoUser.getLastName());
+				userLoginMap.put(AppConstants.FULL_NAME, finoUser.getFirstName() + " " + finoUser.getLastName());
 				userLoginMap.put(AppConstants.JWT_TOKEN, jwtToken);
 				userLoginMap.put(AppConstants.TOKEN_EXPIRATION_IN_MILIS,
 						this.jwtHelpers.getExpirationDateFromToken(jwtToken).toInstant().toEpochMilli());
-				userLoginMap.put(AppConstants.USER_ROLES, finoUser.getFinoUserRoles().stream().map(role->role.getRoleName()).collect(Collectors.toList()));
+				userLoginMap.put(AppConstants.USER_ROLES, finoUser.getFinoUserRoles().stream()
+						.map(role -> role.getRoleName()).collect(Collectors.toList()));
 				userLoginMap.put(AppConstants.status, AppConstants.success);
 				userLoginMap.put(AppConstants.statusCode, AppConstants.ok);
 				userLoginMap.put(AppConstants.statusMessage, AppConstants.userLoggedInSuccesfully);
@@ -161,8 +176,10 @@ public class UserServiceImplementation implements UserService {
 		if (this.finoUserRolesRepository.findById(roleId).isPresent()) {
 			try {
 				this.finoUserRolesRepository.deleteById(roleId);
-			} catch (Exception e) {throw new InternalServerError(e.getMessage());}
-		
+			} catch (Exception e) {
+				throw new InternalServerError(e.getMessage());
+			}
+
 			userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			userResponseMap.put(AppConstants.status, AppConstants.success);
 			userResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
@@ -199,24 +216,24 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public Map<Object, Object> changePassword(String mobileNumber,String oldPassword, String newPassword) {
+	public Map<Object, Object> changePassword(String mobileNumber, String oldPassword, String newPassword) {
 		var finoUserDetails = this.finoUserDetailsRepository.findByMobileNumber(mobileNumber);
 		Map<Object, Object> userResponseMap = new HashMap<>();
-		if(finoUserDetails !=null && this.passwordEncoder.matches(oldPassword,finoUserDetails.getPassword())) {
-		  
+		if (finoUserDetails != null && this.passwordEncoder.matches(oldPassword, finoUserDetails.getPassword())) {
+
 			try {
-				this.finoUserDetailsRepository.updateFinoUserPassword(this.passwordEncoder.encode(newPassword), mobileNumber);
+				this.finoUserDetailsRepository.updateFinoUserPassword(this.passwordEncoder.encode(newPassword),
+						mobileNumber);
 				userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 				userResponseMap.put(AppConstants.status, AppConstants.success);
 				userResponseMap.put(AppConstants.statusMessage, AppConstants.passwordUpdatedSuccesFully);
-				
-			}catch (Exception e) {
+
+			} catch (Exception e) {
 				throw new InternalServerError(e.getMessage());
 			}
-			
-		return 	userResponseMap;
-		}
-		else {
+
+			return userResponseMap;
+		} else {
 			throw new BadRequest("Password didn't match please check your old password and try again...");
 		}
 	}
@@ -225,10 +242,15 @@ public class UserServiceImplementation implements UserService {
 	public Map<Object, Object> deleteFinoUserDetails(String mobileNumber) {
 		Map<Object, Object> userResponseMap = new HashMap<>();
 
-		if (this.finoUserDetailsRepository.findByMobileNumber(mobileNumber) !=null) {
-			try{
-			this.finoUserDetailsRepository.updateFinoUserStatus(false, mobileNumber);
-			}catch(Exception e){throw new InternalServerError(e.getMessage());}
+		var finoUserDetails=this.finoUserDetailsRepository.findByMobileNumber(mobileNumber);
+		
+		if ( finoUserDetails!= null) {
+			try {
+				this.finoUserDetailsRepository.updateFinoUserStatus(false, mobileNumber);
+				this.clientDetailsRepository.updateClientStatus(false, this.clientDetailsRepository.findByFinoUserDetails(finoUserDetails).getClientId());
+			} catch (Exception e) {
+				throw new InternalServerError(e.getMessage());
+			}
 			userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 			userResponseMap.put(AppConstants.status, AppConstants.success);
 			userResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
@@ -243,13 +265,14 @@ public class UserServiceImplementation implements UserService {
 	public Map<Object, Object> updateFinoUserDetails(String mobileNumber, FinoUserEdit finoUserEdit) {
 		Map<Object, Object> userResponseMap = new HashMap<>();
 
-		if (this.finoUserDetailsRepository.findByMobileNumber(mobileNumber)!=null) {
+		if (this.finoUserDetailsRepository.findByMobileNumber(mobileNumber) != null) {
 			try {
-				this.finoUserDetailsRepository.updateFinoUserDetails(finoUserEdit.getFirstName(),finoUserEdit.getLastName(),finoUserEdit.getDateOfBirth(),finoUserEdit.getEmailId(),mobileNumber);
-						userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-						userResponseMap.put(AppConstants.status, AppConstants.success);
-						userResponseMap.put(AppConstants.statusMessage,
-						AppConstants.recordUpdatedSuccessFully + mobileNumber);
+				this.finoUserDetailsRepository.updateFinoUserDetails(finoUserEdit.getFirstName(),
+						finoUserEdit.getLastName(), finoUserEdit.getDateOfBirth(), finoUserEdit.getEmailId(),
+						mobileNumber);
+				userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				userResponseMap.put(AppConstants.status, AppConstants.success);
+				userResponseMap.put(AppConstants.statusMessage, AppConstants.recordUpdatedSuccessFully + mobileNumber);
 
 			} catch (Exception e) {
 				throw new BadRequest(e.getMessage());

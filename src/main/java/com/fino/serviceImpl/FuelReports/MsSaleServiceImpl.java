@@ -56,7 +56,7 @@ public class MsSaleServiceImpl implements MsSaleService {
             try {
                 var previouseDayMsSale = this.fuelReportUtils.getPreviousDayReport(msSaleList,
                         this.msSaleOfPreviousDay);
-                log.info("previous day data:: " + previouseDayMsSale.getMSSaleDate());
+                log.info("previous day data:: " + previouseDayMsSale.getMsSaleDate());
 
                 var msSaleResponseIfDataAvailable = this.petrolTankOneRepository.save(
                         this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto, previouseDayMsSale));
@@ -106,7 +106,7 @@ public class MsSaleServiceImpl implements MsSaleService {
     Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
         Calendar calender = Calendar.getInstance();
         calender.add(Calendar.DATE, -1);
-        return petrol.getMSSaleDate().isEqual(
+        return petrol.getMsSaleDate().isEqual(
                 LocalDateTime.ofInstant(calender.toInstant(), calender.getTimeZone().toZoneId()).toLocalDate());
     };
 
