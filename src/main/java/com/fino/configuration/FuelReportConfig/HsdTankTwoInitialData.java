@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import lombok.*;
 
 @Configuration
-@ConfigurationProperties("hsdtankone")
+@ConfigurationProperties("hsdtanktwo")
 @Getter
 @Setter
 @Component

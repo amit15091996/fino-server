@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Configuration
-@ConfigurationProperties("hsdtanktwo")
+@ConfigurationProperties("hsdtankone")
 @Getter
 @Setter
 @Component
