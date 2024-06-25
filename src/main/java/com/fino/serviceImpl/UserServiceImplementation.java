@@ -71,11 +71,10 @@ public class UserServiceImplementation implements UserService {
 			finoUserRoles.setFinoUserDetails(finoUserDetails);
 			finoUserDetails.setFinoUserRoles(Arrays.asList(finoUserRoles));
 			clientDetails.setClientName(finoUserDetailsDto.getRegisteredClientName());
+			clientDetails.setClientActive(Boolean.TRUE);
 			clientDetails.setFinoUserDetails(finoUserDetails);
-			
 			this.finoUserDetailsRepository.save(finoUserDetails);
 			this.clientDetailsRepository.save(clientDetails);
-			
 			userSignUpMap.put(AppConstants.status, AppConstants.success);
 			userSignUpMap.put(AppConstants.statusCode, AppConstants.ok);
 			userSignUpMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);

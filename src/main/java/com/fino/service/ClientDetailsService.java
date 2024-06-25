@@ -6,5 +6,5 @@ public interface ClientDetailsService {
     Map<Object, Object> insertClientDetails(ClientDetailsDto clientDetailsDto);
     Map<Object, Object> deleteClientDetails(Long clientId);
     Map<Object, Object> getAllClientDetails();
-
+    Map<Object, Object> getClientTransactionByUserName(String mobileNumber);
 }

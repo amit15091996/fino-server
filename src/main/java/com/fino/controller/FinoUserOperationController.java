@@ -103,4 +103,11 @@ public class FinoUserOperationController {
 	public ResponseEntity<Map<Object, Object>> getAllClients() {
 		return ResponseEntity.ok(this.clientDetailsService.getAllClientDetails());
 	}
+	
+	@GetMapping("/get-cms-txn-by-client/{mobileNumber}")
+	@PreAuthorize(AuthorizationHelpers.CLIENT_AUTH)
+	public ResponseEntity<Map<Object, Object>> getCmsTxnByMobileNumber(@PathVariable("mobileNumber") String mobileNumber) {
+		return ResponseEntity.ok(this.clientDetailsService.getClientTransactionByUserName(mobileNumber));
+	}
+	
 }
