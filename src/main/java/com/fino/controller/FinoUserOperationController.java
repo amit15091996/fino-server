@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fino.dto.ClientDetailsDto;
+import com.fino.dto.ClientSearchDto;
 import com.fino.dto.FinoUserDetailsDto;
 import com.fino.dto.FinoUserEdit;
 import com.fino.helpers.AuthorizationHelpers;
@@ -103,4 +104,11 @@ public class FinoUserOperationController {
 	public ResponseEntity<Map<Object, Object>> getAllClients() {
 		return ResponseEntity.ok(this.clientDetailsService.getAllClientDetails());
 	}
+	
+	@PostMapping("/get-cms-txn-by-client/{mobileNumber}")
+	@PreAuthorize(AuthorizationHelpers.CLIENT_AUTH)
+	public ResponseEntity<Map<Object, Object>> getCmsTxnByMobileNumber(@PathVariable("mobileNumber") String mobileNumber,@RequestBody ClientSearchDto clientSearchDto) {
+		return ResponseEntity.ok(this.clientDetailsService.getClientTransactionByUserName(mobileNumber,clientSearchDto));
+	}
+	
 }
