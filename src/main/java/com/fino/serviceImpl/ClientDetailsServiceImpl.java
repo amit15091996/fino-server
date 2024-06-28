@@ -99,7 +99,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 			clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
 			clientResponseMap.put(AppConstants.response,
 					allCmsTxnOfUser.stream().filter(cms -> cms.getCmsTransactionDate().toString().split("-")[1]
-							.equalsIgnoreCase(clientSearchDto.getYear())).collect(Collectors.toList()));
+							.equalsIgnoreCase(clientSearchDto.getMonth())).collect(Collectors.toList()));
 		}
 
 		else if ((clientSearchDto.getFromDate() != null && !clientSearchDto.getFromDate().isEmpty())

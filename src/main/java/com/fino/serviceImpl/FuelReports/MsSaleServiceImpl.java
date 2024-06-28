@@ -2,6 +2,8 @@ package com.fino.serviceImpl.FuelReports;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class MsSaleServiceImpl implements MsSaleService {
     public Map<Object, Object> insertMsSaleDetails(MsSaleDto msSaleDto) {
         Map<Object, Object> msSaleResponseMap = new HashMap<>();
         List<PetrolTankOne> msSaleList = this.petrolTankOneRepository.findAll();
+
         if (msSaleList.isEmpty()) {
             try {
                 var msSaleResponse = this.petrolTankOneRepository
@@ -54,8 +57,7 @@ public class MsSaleServiceImpl implements MsSaleService {
         } else {
 
             try {
-                var previouseDayMsSale = this.fuelReportUtils.getPreviousDayReport(msSaleList,
-                        this.msSaleOfPreviousDay);
+                var previouseDayMsSale = Collections.max(msSaleList,Comparator.comparing(petrol->petrol.getMsSaleDate()));
                 log.info("previous day data:: " + previouseDayMsSale.getMsSaleDate());
 
                 var msSaleResponseIfDataAvailable = this.petrolTankOneRepository.save(
@@ -75,15 +77,15 @@ public class MsSaleServiceImpl implements MsSaleService {
     @Override
     public Map<Object, Object> deleteMsSaleDetails(Long msSaleId) {
         Map<Object, Object> msSaleResponseMap = new HashMap<>();
-		if (this.petrolTankOneRepository.findById(msSaleId).isPresent()) {
-			this.petrolTankOneRepository.deleteById(msSaleId);
-			msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-			msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
-		} else {
-			throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
-		}
-		return msSaleResponseMap;
+        if (this.petrolTankOneRepository.findById(msSaleId).isPresent()) {
+            this.petrolTankOneRepository.deleteById(msSaleId);
+            msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+            msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+            msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+        } else {
+            throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
+        }
+        return msSaleResponseMap;
     }
 
     @Override
@@ -107,7 +109,13 @@ public class MsSaleServiceImpl implements MsSaleService {
         Calendar calender = Calendar.getInstance();
         calender.add(Calendar.DATE, -1);
         return petrol.getMsSaleDate().isEqual(
-                LocalDateTime.ofInstant(calender.toInstant(), calender.getTimeZone().toZoneId()).toLocalDate());
+                LocalDateTime.ofInstant(calender.toInstant(),
+                        calender.getTimeZone().toZoneId()).toLocalDate());
     };
+
+    // Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
+
+    // return Collections.m;
+    // };
 
 }
