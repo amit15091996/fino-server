@@ -2,6 +2,8 @@ package com.fino.serviceImpl.FuelReports;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +54,8 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 		} else {
 
 			try {
-				var previouseDayhsdTankTwo = this.fuelReportUtils.getPreviousDayReport(hsdTankTwoList,
-						this.hsdTankTwoPreviousDay);
+				var previouseDayhsdTankTwo = Collections.max(hsdTankTwoList,
+						Comparator.comparing(hsdTwo -> hsdTwo.getHsdTankTwoDate()));
 				log.info("previous day data:: " + previouseDayhsdTankTwo.getHsdTankTwoDate());
 
 				var hsdTankTwoIfDataAvailableResponse = this.dieselTankTwoRepository.save(this.fuelReportUtils
