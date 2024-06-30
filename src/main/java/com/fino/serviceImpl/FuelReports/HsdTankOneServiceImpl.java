@@ -18,6 +18,7 @@ import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.DieselTankOneRepository;
 import com.fino.service.FuelReports.HsdTankOneService;
+import com.fino.utils.FuelReportUpdateUtil;
 import com.fino.utils.FuelReportUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +33,9 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 	private FuelReportUtils fuelReportUtils;
 	@Autowired
 	private HsdTankOneInitialData hsdTankOneInitialData;
+
+	@Autowired
+	private FuelReportUpdateUtil fuelReportUpdateUtil;
 
 	@Override
 	public Map<Object, Object> insertHsdTankOneDetails(HsdTankOneDto hsdTankOneDto) {
@@ -89,6 +93,30 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 	@Override
 	public Map<Object, Object> updateHsdTankOneDetails(Long hsdTankOneId, HsdTankOneDto hsdTankOneDto) {
 		Map<Object, Object> hsdTankOneResponseMap = new HashMap<>();
+
+		var hsdTankOneRecord = this.dieselTankOneRepository.findById(hsdTankOneId);
+		var previousDayRecordOfhsdTankOne = this.dieselTankOneRepository
+				.findByHsdTankOneDate(hsdTankOneDto.getHsdTankOneDate().minusDays(1));
+
+		if (hsdTankOneRecord.isPresent()) {
+			try {
+				var updatedHsdTankOneRecord = this.fuelReportUtils.hsdTankOneDetailsIfPreviousDayDataAvailable(
+						hsdTankOneDto, previousDayRecordOfhsdTankOne.get());
+
+				this.dieselTankOneRepository.save(this.fuelReportUpdateUtil.getUpdatedHsdTankOne(hsdTankOneRecord.get(),
+						updatedHsdTankOneRecord));
+				hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				hsdTankOneResponseMap.put(AppConstants.status, AppConstants.success);
+				hsdTankOneResponseMap.put(AppConstants.statusMessage,
+						AppConstants.recordUpdatedSuccessFully + hsdTankOneId);
+
+			} catch (Exception e) {
+				throw new BadRequest(e.getMessage());
+			}
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + hsdTankOneId);
+		}
+
 		return hsdTankOneResponseMap;
 	}
 

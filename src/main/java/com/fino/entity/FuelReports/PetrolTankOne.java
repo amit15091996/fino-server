@@ -35,11 +35,11 @@ public class PetrolTankOne extends FuelTesting {
     @TableGenerator(allocationSize = 1, initialValue = 1, name = "fino_petrol_tank_one_sequence")
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "fino_petrol_tank_one_sequence")
-    private Long MSSaleId;
+    private Long msSaleId;
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private LocalDate msSaleDate;
     @Column(columnDefinition = "Decimal(20,2)")
     private Double openingStockOfMSSale;

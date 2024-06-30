@@ -18,6 +18,7 @@ import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.DieselTankTwoRepository;
 import com.fino.service.FuelReports.HsdTankTwoService;
+import com.fino.utils.FuelReportUpdateUtil;
 import com.fino.utils.FuelReportUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 	@Autowired
 	private HsdTankTwoInitialData hsdTankTwoInitialData;
 
+	@Autowired
+	private FuelReportUpdateUtil fuelReportUpdateUtil;
+
 	@Override
 	public Map<Object, Object> insertHsdTankTwoDetails(HsdTankTwoDto hsdTankTwoDto) {
 		Map<Object, Object> hsdTankTwoResponseMap = new HashMap<>();
@@ -49,7 +53,7 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 					hsdTankTwoResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
 				}
 			} catch (Exception e) {
-				throw new BadRequest(e.getLocalizedMessage());
+				throw new BadRequest(e.getMessage());
 			}
 		} else {
 
@@ -66,7 +70,7 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 					hsdTankTwoResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
 				}
 			} catch (Exception e) {
-				throw new BadRequest(e.getLocalizedMessage());
+				throw new BadRequest(e.getMessage());
 			}
 		}
 		return hsdTankTwoResponseMap;
@@ -89,6 +93,29 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 	@Override
 	public Map<Object, Object> updateHsdTankTwoDetails(Long hsdTankTwoId, HsdTankTwoDto hsdTankTwoDto) {
 		Map<Object, Object> hsdTankTwoResponseMap = new HashMap<>();
+
+		var hsdTankTwoRecord = this.dieselTankTwoRepository.findById(hsdTankTwoId);
+		var previousDayRecordOfhsdTankTwo = this.dieselTankTwoRepository
+				.findByHsdTankTwoDate(hsdTankTwoDto.getHsdTankTwoDate().minusDays(1));
+
+		if (hsdTankTwoRecord.isPresent()) {
+			try {
+				var updatedHsdTankTwoRecord = this.fuelReportUtils.hsdTankTwoDetailsIfPreviousDayDataAvailable(
+						hsdTankTwoDto, previousDayRecordOfhsdTankTwo.get());
+				this.dieselTankTwoRepository.save(this.fuelReportUpdateUtil.getUpdatedHsdTankTwo(hsdTankTwoRecord.get(),
+						updatedHsdTankTwoRecord));
+				hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				hsdTankTwoResponseMap.put(AppConstants.status, AppConstants.success);
+				hsdTankTwoResponseMap.put(AppConstants.statusMessage,
+						AppConstants.recordUpdatedSuccessFully + hsdTankTwoId);
+
+			} catch (Exception e) {
+				throw new BadRequest(e.getMessage());
+			}
+
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + hsdTankTwoId);
+		}
 
 		return hsdTankTwoResponseMap;
 	}

@@ -39,7 +39,7 @@ public class DieselTankOne extends FuelTesting {
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private LocalDate hsdTankOneDate;
     @Column(columnDefinition = "Decimal(20,2)")
     private Double openingStockOfHsdTankOne;

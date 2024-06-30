@@ -19,6 +19,7 @@ import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.PetrolTankOneRepository;
 import com.fino.service.FuelReports.MsSaleService;
+import com.fino.utils.FuelReportUpdateUtil;
 import com.fino.utils.FuelReportUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,95 +28,119 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MsSaleServiceImpl implements MsSaleService {
 
-    @Autowired
-    private PetrolTankOneRepository petrolTankOneRepository;
+	@Autowired
+	private PetrolTankOneRepository petrolTankOneRepository;
 
-    @Autowired
-    private FuelReportUtils fuelReportUtils;
+	@Autowired
+	private FuelReportUtils fuelReportUtils;
 
-    @Autowired
-    private MsSaleInitialData msSaleInitialData;
+	@Autowired
+	private MsSaleInitialData msSaleInitialData;
 
-    @Override
-    public Map<Object, Object> insertMsSaleDetails(MsSaleDto msSaleDto) {
-        Map<Object, Object> msSaleResponseMap = new HashMap<>();
-        List<PetrolTankOne> msSaleList = this.petrolTankOneRepository.findAll();
+	@Autowired
+	private FuelReportUpdateUtil fuelReportUpdateUtil;
 
-        if (msSaleList.isEmpty()) {
-            try {
-                var msSaleResponse = this.petrolTankOneRepository
-                        .save(this.fuelReportUtils.msSaleDetailsIfNoDataAvailable(msSaleDto,
-                                msSaleInitialData.getMssaleinitialvalue()));
-                if (msSaleResponse != null) {
-                    msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-                    msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-                    msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
-                }
-            } catch (Exception e) {
-                throw new BadRequest(e.getLocalizedMessage());
-            }
-        } else {
+	@Override
+	public Map<Object, Object> insertMsSaleDetails(MsSaleDto msSaleDto) {
+		Map<Object, Object> msSaleResponseMap = new HashMap<>();
+		List<PetrolTankOne> msSaleList = this.petrolTankOneRepository.findAll();
 
-            try {
-                var previouseDayMsSale = Collections.max(msSaleList,Comparator.comparing(petrol->petrol.getMsSaleDate()));
-                log.info("previous day data:: " + previouseDayMsSale.getMsSaleDate());
+		if (msSaleList.isEmpty()) {
+			try {
+				var msSaleResponse = this.petrolTankOneRepository.save(this.fuelReportUtils
+						.msSaleDetailsIfNoDataAvailable(msSaleDto, msSaleInitialData.getMssaleinitialvalue()));
+				if (msSaleResponse != null) {
+					msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+					msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
+				}
+			} catch (Exception e) {
+				throw new BadRequest(e.getLocalizedMessage());
+			}
+		} else {
 
-                var msSaleResponseIfDataAvailable = this.petrolTankOneRepository.save(
-                        this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto, previouseDayMsSale));
-                if (msSaleResponseIfDataAvailable != null) {
-                    msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-                    msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-                    msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
-                }
-            } catch (Exception e) {
-                throw new BadRequest(e.getLocalizedMessage());
-            }
-        }
-        return msSaleResponseMap;
-    }
+			try {
+				var previouseDayMsSale = Collections.max(msSaleList,
+						Comparator.comparing(petrol -> petrol.getMsSaleDate()));
+				log.info("previous day data:: " + previouseDayMsSale.getMsSaleDate());
 
-    @Override
-    public Map<Object, Object> deleteMsSaleDetails(Long msSaleId) {
-        Map<Object, Object> msSaleResponseMap = new HashMap<>();
-        if (this.petrolTankOneRepository.findById(msSaleId).isPresent()) {
-            this.petrolTankOneRepository.deleteById(msSaleId);
-            msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-            msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-            msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
-        } else {
-            throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
-        }
-        return msSaleResponseMap;
-    }
+				var msSaleResponseIfDataAvailable = this.petrolTankOneRepository.save(
+						this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto, previouseDayMsSale));
+				if (msSaleResponseIfDataAvailable != null) {
+					msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+					msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
+				}
+			} catch (Exception e) {
+				throw new BadRequest(e.getLocalizedMessage());
+			}
+		}
+		return msSaleResponseMap;
+	}
 
-    @Override
-    public Map<Object, Object> updateMsSaleDetails(Long msSaleId, MsSaleDto msSaleDto) {
-        Map<Object, Object> msSaleResponseMap = new HashMap<>();
+	@Override
+	public Map<Object, Object> deleteMsSaleDetails(Long msSaleId) {
+		Map<Object, Object> msSaleResponseMap = new HashMap<>();
+		if (this.petrolTankOneRepository.findById(msSaleId).isPresent()) {
+			this.petrolTankOneRepository.deleteById(msSaleId);
+			msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+			msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+			msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
+		}
+		return msSaleResponseMap;
+	}
 
-        return msSaleResponseMap;
-    }
+	@Override
+	public Map<Object, Object> updateMsSaleDetails(Long msSaleId, MsSaleDto msSaleDto) {
 
-    @Override
-    public Map<Object, Object> getAllMsSaleDetails() {
-        Map<Object, Object> msSaleResponseMap = new HashMap<>();
-        msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-        msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-        msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-        msSaleResponseMap.put(AppConstants.response, this.petrolTankOneRepository.findAll());
-        return msSaleResponseMap;
-    }
+		Map<Object, Object> msSaleResponseMap = new HashMap<>();
+		var msSaleRecord = this.petrolTankOneRepository.findById(msSaleId);
+		var previousDayRecordOfMsSale = this.petrolTankOneRepository.findByMsSaleDate(msSaleDto.getMsSaleDate().minusDays(1));
 
-    Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
-        Calendar calender = Calendar.getInstance();
-        calender.add(Calendar.DATE, -1);
-        return petrol.getMsSaleDate().isEqual(
-                LocalDateTime.ofInstant(calender.toInstant(),
-                        calender.getTimeZone().toZoneId()).toLocalDate());
-    };
+		if (msSaleRecord.isPresent()) {
+			try {
+				var updatedMsSale = this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto,
+						previousDayRecordOfMsSale.get());
 
-    // Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
+				this.petrolTankOneRepository
+						.save(this.fuelReportUpdateUtil.getUpdatedMssale(msSaleRecord.get(), updatedMsSale));
+				msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+				msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.recordUpdatedSuccessFully + msSaleId);
 
-    // return Collections.m;
-    // };
+			} catch (Exception e) {
+				throw new BadRequest(e.getMessage());
+			}
+
+		} else {
+			throw new NotFoundException(AppConstants.noRecordFound + msSaleId);
+		}
+
+		return msSaleResponseMap;
+	}
+
+	@Override
+	public Map<Object, Object> getAllMsSaleDetails() {
+		Map<Object, Object> msSaleResponseMap = new HashMap<>();
+		msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+		msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+		msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+		msSaleResponseMap.put(AppConstants.response, this.petrolTankOneRepository.findAll());
+		return msSaleResponseMap;
+	}
+
+	Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
+		Calendar calender = Calendar.getInstance();
+		calender.add(Calendar.DATE, -1);
+		return petrol.getMsSaleDate().isEqual(
+				LocalDateTime.ofInstant(calender.toInstant(), calender.getTimeZone().toZoneId()).toLocalDate());
+	};
+
+	// Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
+
+	// return Collections.m;
+	// };
 
 }
