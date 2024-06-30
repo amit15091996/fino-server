@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fino.dto.FuelReports.HsdTankOneDto;
 import com.fino.dto.FuelReports.HsdTankTwoDto;
 import com.fino.dto.FuelReports.MsSaleDto;
@@ -20,6 +20,8 @@ import com.fino.helpers.AuthorizationHelpers;
 import com.fino.service.FuelReports.HsdTankOneService;
 import com.fino.service.FuelReports.HsdTankTwoService;
 import com.fino.service.FuelReports.MsSaleService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/fino/system/fuel-report")
@@ -53,6 +55,13 @@ public class FinoFuelReportsController {
 		return ResponseEntity.ok(this.msSaleService.deleteMsSaleDetails(msSaleId));
 	}
 
+	@PutMapping("/update-mssale-reports/{msSaleId}")
+	@PreAuthorize(AuthorizationHelpers.MANAGER_AUTH)
+	public ResponseEntity<Map<Object, Object>> updateMsSaleRecord(@PathVariable(name = "msSaleId") Long msSaleId,
+			@RequestBody @Valid MsSaleDto msSaleDto) {
+		return ResponseEntity.ok(this.msSaleService.updateMsSaleDetails(msSaleId, msSaleDto));
+	}
+
 	@PostMapping("/insert-hsd-tank-one-reports")
 	@PreAuthorize(AuthorizationHelpers.MANAGER_AUTH)
 	public ResponseEntity<Map<Object, Object>> insertHsdTankOneRecord(@RequestBody HsdTankOneDto hsdTankOneDto) {
@@ -72,6 +81,13 @@ public class FinoFuelReportsController {
 			@PathVariable("hsdTankOneId") Long hsdTankOneId) {
 
 		return ResponseEntity.ok(this.hsdTankOneService.deleteHsdTankOneDetails(hsdTankOneId));
+	}
+
+	@PutMapping("/update-hsd-tank-one-reports/{hsdTankOneId}")
+	@PreAuthorize(AuthorizationHelpers.MANAGER_AUTH)
+	public ResponseEntity<Map<Object, Object>> updateHsdTankOneRecord(
+			@PathVariable(name = "hsdTankOneId") Long hsdTankOneId, @RequestBody @Valid HsdTankOneDto hsdTankOneDto) {
+		return ResponseEntity.ok(this.hsdTankOneService.updateHsdTankOneDetails(hsdTankOneId, hsdTankOneDto));
 	}
 
 	@PostMapping("/insert-hsd-tank-two-reports")
@@ -94,6 +110,12 @@ public class FinoFuelReportsController {
 
 		return ResponseEntity.ok(this.hsdTankTwoService.deleteHsdTankTwoDetails(hsdTankTwoId));
 	}
-	
-	
+
+	@PutMapping("/update-hsd-tank-two-reports/{hsdTankTwoId}")
+	@PreAuthorize(AuthorizationHelpers.MANAGER_AUTH)
+	public ResponseEntity<Map<Object, Object>> updateHsdTankTwoRecord(
+			@PathVariable(name = "hsdTankTwoId") Long hsdTankTwoId, @RequestBody HsdTankTwoDto hsdTankTwoDto) {
+		return ResponseEntity.ok(this.hsdTankTwoService.updateHsdTankTwoDetails(hsdTankTwoId, hsdTankTwoDto));
+	}
+
 }

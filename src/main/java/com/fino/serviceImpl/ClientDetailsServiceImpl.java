@@ -30,7 +30,6 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 		Map<Object, Object> clientResponseMap = new HashMap<>();
 		var clientDetails = new ClientDetails();
 		clientDetails.setBankName(clientDetailsDto.getBankName());
-		clientDetails.setClientName(clientDetailsDto.getClientName());
 		clientDetails.setClientActive(Boolean.TRUE);
 		try {
 			var clientDetailsResponse = this.clientDetailsRepository.save(clientDetails);
