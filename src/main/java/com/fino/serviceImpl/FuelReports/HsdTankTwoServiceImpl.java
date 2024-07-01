@@ -99,18 +99,37 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 				.findByHsdTankTwoDate(hsdTankTwoDto.getHsdTankTwoDate().minusDays(1));
 
 		if (hsdTankTwoRecord.isPresent()) {
-			try {
-				var updatedHsdTankTwoRecord = this.fuelReportUtils.hsdTankTwoDetailsIfPreviousDayDataAvailable(
-						hsdTankTwoDto, previousDayRecordOfhsdTankTwo.get());
-				this.dieselTankTwoRepository.save(this.fuelReportUpdateUtil.getUpdatedHsdTankTwo(hsdTankTwoRecord.get(),
-						updatedHsdTankTwoRecord));
-				hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-				hsdTankTwoResponseMap.put(AppConstants.status, AppConstants.success);
-				hsdTankTwoResponseMap.put(AppConstants.statusMessage,
-						AppConstants.recordUpdatedSuccessFully + hsdTankTwoId);
 
-			} catch (Exception e) {
-				throw new BadRequest(e.getMessage());
+			if (previousDayRecordOfhsdTankTwo.isEmpty()) {
+
+				try {
+					var hsdTankOneIfPreviousDayUnavailable = this.fuelReportUtils.hsdTankTwoDetailsIfNoDataAvailable(
+							hsdTankTwoDto, this.hsdTankTwoInitialData.getHsdtanktwoinitialvalue());
+
+					this.dieselTankTwoRepository.save(this.fuelReportUpdateUtil
+							.getUpdatedHsdTankTwo(hsdTankTwoRecord.get(), hsdTankOneIfPreviousDayUnavailable));
+					hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					hsdTankTwoResponseMap.put(AppConstants.status, AppConstants.success);
+					hsdTankTwoResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + hsdTankTwoId);
+
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
+			} else {
+				try {
+					var updatedHsdTankTwoRecord = this.fuelReportUtils.hsdTankTwoDetailsIfPreviousDayDataAvailable(
+							hsdTankTwoDto, previousDayRecordOfhsdTankTwo.get());
+					this.dieselTankTwoRepository.save(this.fuelReportUpdateUtil
+							.getUpdatedHsdTankTwo(hsdTankTwoRecord.get(), updatedHsdTankTwoRecord));
+					hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					hsdTankTwoResponseMap.put(AppConstants.status, AppConstants.success);
+					hsdTankTwoResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + hsdTankTwoId);
+
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
 			}
 
 		} else {

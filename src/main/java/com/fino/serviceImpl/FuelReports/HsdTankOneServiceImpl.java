@@ -99,20 +99,38 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 				.findByHsdTankOneDate(hsdTankOneDto.getHsdTankOneDate().minusDays(1));
 
 		if (hsdTankOneRecord.isPresent()) {
-			try {
-				var updatedHsdTankOneRecord = this.fuelReportUtils.hsdTankOneDetailsIfPreviousDayDataAvailable(
-						hsdTankOneDto, previousDayRecordOfhsdTankOne.get());
 
-				this.dieselTankOneRepository.save(this.fuelReportUpdateUtil.getUpdatedHsdTankOne(hsdTankOneRecord.get(),
-						updatedHsdTankOneRecord));
-				hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-				hsdTankOneResponseMap.put(AppConstants.status, AppConstants.success);
-				hsdTankOneResponseMap.put(AppConstants.statusMessage,
-						AppConstants.recordUpdatedSuccessFully + hsdTankOneId);
+			if (previousDayRecordOfhsdTankOne.isEmpty()) {
+				var hsdTankOneIfPrevDayUnavailable = this.fuelReportUtils.hsdTankOneDetailsIfNoDataAvailable(
+						hsdTankOneDto, this.hsdTankOneInitialData.getHsdtankoneinitialvalue());
+				try {
+					this.dieselTankOneRepository.save(this.fuelReportUpdateUtil
+							.getUpdatedHsdTankOne(hsdTankOneRecord.get(), hsdTankOneIfPrevDayUnavailable));
+					hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					hsdTankOneResponseMap.put(AppConstants.status, AppConstants.success);
+					hsdTankOneResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + hsdTankOneId);
 
-			} catch (Exception e) {
-				throw new BadRequest(e.getMessage());
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
+			} else {
+				try {
+					var updatedHsdTankOneRecord = this.fuelReportUtils.hsdTankOneDetailsIfPreviousDayDataAvailable(
+							hsdTankOneDto, previousDayRecordOfhsdTankOne.get());
+
+					this.dieselTankOneRepository.save(this.fuelReportUpdateUtil
+							.getUpdatedHsdTankOne(hsdTankOneRecord.get(), updatedHsdTankOneRecord));
+					hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					hsdTankOneResponseMap.put(AppConstants.status, AppConstants.success);
+					hsdTankOneResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + hsdTankOneId);
+
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
 			}
+
 		} else {
 			throw new NotFoundException(AppConstants.noRecordFound + hsdTankOneId);
 		}
