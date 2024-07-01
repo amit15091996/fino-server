@@ -97,21 +97,45 @@ public class MsSaleServiceImpl implements MsSaleService {
 
 		Map<Object, Object> msSaleResponseMap = new HashMap<>();
 		var msSaleRecord = this.petrolTankOneRepository.findById(msSaleId);
-		var previousDayRecordOfMsSale = this.petrolTankOneRepository.findByMsSaleDate(msSaleDto.getMsSaleDate().minusDays(1));
+		var previousDayRecordOfMsSale = this.petrolTankOneRepository
+				.findByMsSaleDate(msSaleDto.getMsSaleDate().minusDays(1));
 
 		if (msSaleRecord.isPresent()) {
-			try {
-				var updatedMsSale = this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto,
-						previousDayRecordOfMsSale.get());
 
-				this.petrolTankOneRepository
-						.save(this.fuelReportUpdateUtil.getUpdatedMssale(msSaleRecord.get(), updatedMsSale));
-				msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-				msSaleResponseMap.put(AppConstants.status, AppConstants.success);
-				msSaleResponseMap.put(AppConstants.statusMessage, AppConstants.recordUpdatedSuccessFully + msSaleId);
+			if (previousDayRecordOfMsSale.isEmpty()) {
+				try {
 
-			} catch (Exception e) {
-				throw new BadRequest(e.getMessage());
+					var msSaleIfPrevDayUnavilable = this.fuelReportUtils.msSaleDetailsIfNoDataAvailable(msSaleDto,
+							msSaleInitialData.getMssaleinitialvalue());
+					this.petrolTankOneRepository.save(
+							this.fuelReportUpdateUtil.getUpdatedMssale(msSaleRecord.get(), msSaleIfPrevDayUnavilable));
+
+					msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+					msSaleResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + msSaleId);
+
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
+			}
+
+			else {
+
+				try {
+					var updatedMsSale = this.fuelReportUtils.msSaleDetailsIfPreviousDayDataAvailable(msSaleDto,
+							previousDayRecordOfMsSale.get());
+
+					this.petrolTankOneRepository
+							.save(this.fuelReportUpdateUtil.getUpdatedMssale(msSaleRecord.get(), updatedMsSale));
+					msSaleResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					msSaleResponseMap.put(AppConstants.status, AppConstants.success);
+					msSaleResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + msSaleId);
+
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
 			}
 
 		} else {
@@ -137,10 +161,5 @@ public class MsSaleServiceImpl implements MsSaleService {
 		return petrol.getMsSaleDate().isEqual(
 				LocalDateTime.ofInstant(calender.toInstant(), calender.getTimeZone().toZoneId()).toLocalDate());
 	};
-
-	// Predicate<PetrolTankOne> msSaleOfPreviousDay = (petrol) -> {
-
-	// return Collections.m;
-	// };
 
 }
