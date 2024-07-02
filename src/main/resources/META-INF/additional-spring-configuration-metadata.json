@@ -28,5 +28,30 @@
     "name": "hsdtanktwo.hsdtanktwoinitialvalue.nozzleTwoReading",
     "type": "java.lang.String",
     "description": "A description for 'hsdtanktwo.hsdtanktwoinitialvalue.nozzleTwoReading'"
+  },
+  {
+    "name": "hsdtankone.hsdtankoneinitialvalue.opening-stock",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtankone.hsdtankoneinitialvalue.opening-stock'"
+  },
+  {
+    "name": "hsdtankone.hsdtankoneinitialvalue.nozzleOneReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtankone.hsdtankoneinitialvalue.nozzleOneReading'"
+  },
+  {
+    "name": "hsdtankone.hsdtankoneinitialvalue.nozzleTwoReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtankone.hsdtankoneinitialvalue.nozzleTwoReading'"
+  },
+  {
+    "name": "hsdtankone.hsdtankoneinitialvalue.nozzleThreeReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtankone.hsdtankoneinitialvalue.nozzleThreeReading'"
+  },
+  {
+    "name": "hsdtankone.hsdtankoneinitialvalue.nozzleFourReading",
+    "type": "java.lang.String",
+    "description": "A description for 'hsdtankone.hsdtankoneinitialvalue.nozzleFourReading'"
   }
 ]}
