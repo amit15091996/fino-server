@@ -1,5 +1,5 @@
 server:
-  port: 8097
+  port: 8099
   tomcat:
    relaxed-query-chars: "<,>,[,\\,],^,`,{,|,},:,-"
    relaxed-path-chars:  "<,>,[,\\,],^,`,{,|,},:,-"
@@ -16,7 +16,7 @@ spring:
     
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       
     show-sql: true
     
@@ -42,10 +42,25 @@ spring:
             enable: true
             required: false
 
-      
+mssale:
+  mssaleinitialvalue:
+     "openingStock": 15558
+     "nozzleOneReading": 148260
+     "nozzleTwoReading": 167295
 
+hsdtanktwo:
+ hsdtanktwoinitialvalue:
+     "openingStock": 9680
+     "nozzleOneReading": 613977
+     "nozzleTwoReading": 698945
                 
-
+hsdtankone:
+ hsdtankoneinitialvalue:
+     "openingStock": 13484
+     "nozzleOneReading":  889084
+     "nozzleTwoReading": 556115
+     "nozzleThreeReading": 134027
+     "nozzleFourReading": 132108
       
              
         
