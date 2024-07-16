@@ -70,7 +70,7 @@ public class UserServiceImplementation implements UserService {
 			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + " Role");
 			finoUserRoles.setFinoUserDetails(finoUserDetails);
 			finoUserDetails.setFinoUserRoles(Arrays.asList(finoUserRoles));
-			clientDetails.setClientName(finoUserDetailsDto.getRegisteredClientName());
+			clientDetails.setClientName((finoUserDetailsDto.getRegisteredClientName().isEmpty()||finoUserDetailsDto.getRegisteredClientName().isBlank()||finoUserDetailsDto.getRegisteredClientName()==null ?null:finoUserDetailsDto.getRegisteredClientName()));
 			clientDetails.setClientActive(Boolean.TRUE);
 			clientDetails.setFinoUserDetails(finoUserDetails);
 			this.finoUserDetailsRepository.save(finoUserDetails);
