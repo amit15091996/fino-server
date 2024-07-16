@@ -10,6 +10,7 @@ import com.fino.dto.ClientDetailsDto;
 import com.fino.dto.ClientSearchDto;
 import com.fino.entity.ClientDetails;
 import com.fino.exception.BadRequest;
+import com.fino.exception.InternalServerError;
 import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.records.ClientRecord;
@@ -77,45 +78,59 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 	@Override
 	public Map<Object, Object> getClientTransactionByUserName(String mobileNumber, ClientSearchDto clientSearchDto) {
 		Map<Object, Object> clientResponseMap = new HashMap<>();
-		var allCmsTxnOfUser = this.clientDetailsRepository.getAllActiveClients().stream()
-				.filter(user -> user.getFinoUserDetails() != null)
-				.filter(userDetails -> userDetails.getFinoUserDetails().getMobileNumber()
-						.equalsIgnoreCase(mobileNumber))
-				.map(clientTxn -> clientTxn.getCmsTransactionDetails()).flatMap(cms -> cms.parallelStream())
-				.collect(Collectors.toList());
 
-		if (clientSearchDto.getYear() != null && !clientSearchDto.getYear().isEmpty()) {
-			clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			clientResponseMap.put(AppConstants.status, AppConstants.success);
-			clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			clientResponseMap.put(AppConstants.response,
-					allCmsTxnOfUser.stream().filter(cms -> cms.getCmsTransactionDate().toString().split("-")[0]
-							.equalsIgnoreCase(clientSearchDto.getYear())).collect(Collectors.toList()));
+		try {
 
-		} else if (clientSearchDto.getMonth() != null && !clientSearchDto.getMonth().isEmpty()) {
-			clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			clientResponseMap.put(AppConstants.status, AppConstants.success);
-			clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			clientResponseMap.put(AppConstants.response,
-					allCmsTxnOfUser.stream().filter(cms -> cms.getCmsTransactionDate().toString().split("-")[1]
-							.equalsIgnoreCase(clientSearchDto.getMonth())).collect(Collectors.toList()));
-		}
+			var allCmsTxnOfUser = this.clientDetailsRepository.getAllActiveClients().stream()
+					.filter(user -> user.getFinoUserDetails() != null)
+					.filter(userDetails -> userDetails.getFinoUserDetails().getMobileNumber()
+							.equalsIgnoreCase(mobileNumber))
+					.map(clientTxn -> clientTxn.getCmsTransactionDetails()).flatMap(cms -> cms.parallelStream())
+					.collect(Collectors.toList());
 
-		else if ((clientSearchDto.getFromDate() != null && !clientSearchDto.getFromDate().isEmpty())
-				&& (clientSearchDto.getToDate() != null && !clientSearchDto.getToDate().isEmpty())) {
+			if (clientSearchDto.getYear() != null && !clientSearchDto.getYear().isEmpty()) {
+				clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				clientResponseMap.put(AppConstants.status, AppConstants.success);
+				clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				clientResponseMap
+						.put(AppConstants.response,
+								allCmsTxnOfUser.stream()
+										.filter(cms -> cms.getCmsTransactionDate().toString().split("-")[0]
+												.equalsIgnoreCase(clientSearchDto.getYear()))
+										.collect(Collectors.toList()));
 
-			clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			clientResponseMap.put(AppConstants.status, AppConstants.success);
-			clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			clientResponseMap.put(AppConstants.response, this.filterTransactionByDate.getAllCMSTransactionBetweenDates(
-					clientSearchDto.getFromDate(), clientSearchDto.getToDate(), allCmsTxnOfUser));
+			} else if (clientSearchDto.getMonth() != null && !clientSearchDto.getMonth().isEmpty()) {
+				clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				clientResponseMap.put(AppConstants.status, AppConstants.success);
+				clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				clientResponseMap
+						.put(AppConstants.response,
+								allCmsTxnOfUser.stream()
+										.filter(cms -> cms.getCmsTransactionDate().toString().split("-")[1]
+												.equalsIgnoreCase(clientSearchDto.getMonth()))
+										.collect(Collectors.toList()));
+			}
 
-		} else {
-			clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			clientResponseMap.put(AppConstants.status, AppConstants.success);
-			clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			clientResponseMap.put(AppConstants.response, allCmsTxnOfUser);
+			else if ((clientSearchDto.getFromDate() != null && !clientSearchDto.getFromDate().isEmpty())
+					&& (clientSearchDto.getToDate() != null && !clientSearchDto.getToDate().isEmpty())) {
 
+				clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				clientResponseMap.put(AppConstants.status, AppConstants.success);
+				clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				clientResponseMap.put(AppConstants.response,
+						this.filterTransactionByDate.getAllCMSTransactionBetweenDates(clientSearchDto.getFromDate(),
+								clientSearchDto.getToDate(), allCmsTxnOfUser));
+
+			} else {
+				clientResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				clientResponseMap.put(AppConstants.status, AppConstants.success);
+				clientResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				clientResponseMap.put(AppConstants.response, allCmsTxnOfUser);
+
+			}
+
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
 
 		return clientResponseMap;
