@@ -14,6 +14,7 @@ import com.fino.configuration.FuelReportConfig.HsdTankTwoInitialData;
 import com.fino.dto.FuelReports.HsdTankTwoDto;
 import com.fino.entity.FuelReports.DieselTankTwo;
 import com.fino.exception.BadRequest;
+import com.fino.exception.InternalServerError;
 import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.DieselTankTwoRepository;
@@ -79,6 +80,9 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 	@Override
 	public Map<Object, Object> deleteHsdTankTwoDetails(Long hsdTankTwoId) {
 		Map<Object, Object> hsdTankTwoResponseMap = new HashMap<>();
+		
+		try {
+	
 		if (this.dieselTankTwoRepository.findById(hsdTankTwoId).isPresent()) {
 			this.dieselTankTwoRepository.deleteById(hsdTankTwoId);
 			hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
@@ -88,6 +92,10 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 			throw new NotFoundException(AppConstants.noRecordFound + hsdTankTwoId);
 		}
 		return hsdTankTwoResponseMap;
+		
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 	@Override
@@ -141,12 +149,18 @@ public class HsdTankTwoServiceImpl implements HsdTankTwoService {
 
 	@Override
 	public Map<Object, Object> getAllHsdTankTwoDetails() {
+		
+		try {
 		Map<Object, Object> hsdTankTwoResponseMap = new HashMap<>();
 		hsdTankTwoResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		hsdTankTwoResponseMap.put(AppConstants.status, AppConstants.success);
 		hsdTankTwoResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
 		hsdTankTwoResponseMap.put(AppConstants.response, this.dieselTankTwoRepository.findAll());
 		return hsdTankTwoResponseMap;
+		
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 	Predicate<DieselTankTwo> hsdTankTwoPreviousDay = (tankTwo) -> {

@@ -28,8 +28,8 @@ import lombok.Setter;
 @Table(name = "CMS_TRANSACTION_DETAILS")
 @Entity
 public class CmsTransactionDetails {
-	
-	@TableGenerator(allocationSize = 1, initialValue =1000, name = "cms_transaction_sequence")
+
+	@TableGenerator(allocationSize = 1, initialValue = 1000, name = "cms_transaction_sequence")
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "cms_transaction_sequence")
 	private Long cmsTransactionId;
@@ -50,7 +50,9 @@ public class CmsTransactionDetails {
 	private double cashAmount;
 	@Column(columnDefinition = "Decimal(20,2)")
 	private double balanceAmount;
-	@Column(length =5000, nullable = false)
+	@Column(length = 5000)
 	private String remarks;
+	@Column(length = 200)
+	private String companyName;
 
 }

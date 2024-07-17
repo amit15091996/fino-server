@@ -23,11 +23,9 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	@Autowired
 	private CmsTransactionRepository cmsTransactionRepository;
 
-
 	@Autowired
 	private FilterTransactionByDate filterTransactionByDate;
-	
-	
+
 	@Override
 	public Map<Object, Object> insertCmsTransactionDetails(TransactionDetailsDto transactionDetailsDto) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
@@ -41,6 +39,7 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 		cmsTransactionDetails.setOnlineAmount(transactionDetailsDto.getOnlineAmount());
 		cmsTransactionDetails.setRecievedFrom(transactionDetailsDto.getRecievedFrom());
 		cmsTransactionDetails.setRemarks(transactionDetailsDto.getRemarks());
+		cmsTransactionDetails.setCompanyName(transactionDetailsDto.getCompanyName());
 		try {
 			var bankTransactionDetailsResponse = this.cmsTransactionRepository.save(cmsTransactionDetails);
 			if (bankTransactionDetailsResponse != null) {
@@ -57,15 +56,19 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	@Override
 	public Map<Object, Object> deleteCmsTransactionDetails(Long cmsTransactionId) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
-		if (this.cmsTransactionRepository.findById(cmsTransactionId).isPresent()) {
-			this.cmsTransactionRepository.deleteById(cmsTransactionId);
-			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			cmsResponseMap.put(AppConstants.status, AppConstants.success);
-			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
-		} else {
-			throw new NotFoundException(AppConstants.noRecordFound + cmsTransactionId);
+		try {
+			if (this.cmsTransactionRepository.findById(cmsTransactionId).isPresent()) {
+				this.cmsTransactionRepository.deleteById(cmsTransactionId);
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+			} else {
+				throw new NotFoundException(AppConstants.noRecordFound + cmsTransactionId);
+			}
+			return cmsResponseMap;
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
-		return cmsResponseMap;
 	}
 
 	@Override
@@ -78,7 +81,8 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 				this.cmsTransactionRepository.updateCmsTransactionDetals(transactionDetailsDto.getRecievedFrom(),
 						transactionDetailsDto.getCollectionAmount(), transactionDetailsDto.getTransactionDate(),
 						transactionDetailsDto.getOnlineAmount(), transactionDetailsDto.getBalanceAmount(),
-						transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(), cmsTransactionId);
+						transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(),
+						transactionDetailsDto.getCompanyName(), cmsTransactionId);
 
 				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 				cmsResponseMap.put(AppConstants.status, AppConstants.success);
@@ -97,68 +101,81 @@ public class CmsTransactionServiceImpl implements CmsTransactionService {
 	}
 
 	@Override
-	public Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber,String allTransaction) {
+	public Map<Object, Object> getAllCmsTransactionDetails(String mobileNumber, String allTransaction) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
 
-		 if( allTransaction !=null && allTransaction.equalsIgnoreCase("ALL")) {
-			 cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+		try {
+
+			if (allTransaction != null && allTransaction.equalsIgnoreCase("ALL")) {
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 				cmsResponseMap.put(AppConstants.status, AppConstants.success);
 				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
 				cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findAll());
 				return cmsResponseMap;
-			 
-		 }else {
-			 cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+
+			} else {
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 				cmsResponseMap.put(AppConstants.status, AppConstants.success);
 				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-				cmsResponseMap.put(AppConstants.response, this.cmsTransactionRepository.findByCollectedBy(mobileNumber));
+				cmsResponseMap.put(AppConstants.response,
+						this.cmsTransactionRepository.findByCollectedBy(mobileNumber));
 				return cmsResponseMap;
-		 }
-		
-		
+			}
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 	@Override
-	public Map<Object, Object> getAllCMSTransactionDetailsViaSerachParams(String mobileNumber,String year, String month, String fromDate,
-			String toDate) {
+	public Map<Object, Object> getAllCMSTransactionDetailsViaSerachParams(String mobileNumber, String year,
+			String month, String fromDate, String toDate) {
 		Map<Object, Object> cmsResponseMap = new HashMap<>();
 
-		if (year != null) {
-			List<CmsTransactionDetails> cmsDepositByYear = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
-			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			cmsResponseMap.put(AppConstants.status, AppConstants.success);
-			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			cmsResponseMap.put(AppConstants.response,cmsDepositByYear.stream().filter(deposit->
-				deposit.getCmsTransactionDate().toString().split("-")[0].equalsIgnoreCase(year)
-			).collect(Collectors.toList()));
-		}
+		try {
 
-		else if (month != null) {
-			List<CmsTransactionDetails> cmsDepositByMonth = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
-			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			cmsResponseMap.put(AppConstants.status, AppConstants.success);
-			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			cmsResponseMap.put(AppConstants.response,cmsDepositByMonth.stream().filter(deposit->
-				deposit.getCmsTransactionDate().toString().split("-")[1].equalsIgnoreCase(month)
-			).collect(Collectors.toList()));
-		}
+			if (year != null) {
+				List<CmsTransactionDetails> cmsDepositByYear = this.cmsTransactionRepository
+						.findByCollectedBy(mobileNumber);
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, cmsDepositByYear.stream().filter(
+						deposit -> deposit.getCmsTransactionDate().toString().split("-")[0].equalsIgnoreCase(year))
+						.collect(Collectors.toList()));
+			}
 
-		else if (fromDate != null && toDate != null) {
-			List<CmsTransactionDetails> cmsDepositByDates = this.cmsTransactionRepository.findByCollectedBy(mobileNumber);
-			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			cmsResponseMap.put(AppConstants.status, AppConstants.success);
-			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			cmsResponseMap.put(AppConstants.response,this.filterTransactionByDate.getAllCMSTransactionBetweenDates(fromDate, toDate, cmsDepositByDates));
-		}
+			else if (month != null) {
+				List<CmsTransactionDetails> cmsDepositByMonth = this.cmsTransactionRepository
+						.findByCollectedBy(mobileNumber);
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, cmsDepositByMonth.stream().filter(
+						deposit -> deposit.getCmsTransactionDate().toString().split("-")[1].equalsIgnoreCase(month))
+						.collect(Collectors.toList()));
+			}
 
-		else {
-			cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			cmsResponseMap.put(AppConstants.status, AppConstants.success);
-			cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			cmsResponseMap.put(AppConstants.response, Collections.EMPTY_LIST);
-		}
+			else if (fromDate != null && toDate != null) {
+				List<CmsTransactionDetails> cmsDepositByDates = this.cmsTransactionRepository
+						.findByCollectedBy(mobileNumber);
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, this.filterTransactionByDate
+						.getAllCMSTransactionBetweenDates(fromDate, toDate, cmsDepositByDates));
+			}
 
-	return cmsResponseMap;	
+			else {
+				cmsResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				cmsResponseMap.put(AppConstants.status, AppConstants.success);
+				cmsResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				cmsResponseMap.put(AppConstants.response, Collections.EMPTY_LIST);
+			}
+
+			return cmsResponseMap;
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 }
