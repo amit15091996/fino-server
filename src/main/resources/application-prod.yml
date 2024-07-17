@@ -44,23 +44,23 @@ spring:
 
 mssale:
   mssaleinitialvalue:
-     "openingStock": 15558
-     "nozzleOneReading": 148260
-     "nozzleTwoReading": 167295
+     "openingStock": 13061
+     "nozzleOneReading": 629696
+     "nozzleTwoReading": 316166
 
 hsdtanktwo:
  hsdtanktwoinitialvalue:
-     "openingStock": 9680
-     "nozzleOneReading": 613977
-     "nozzleTwoReading": 698945
+     "openingStock": 3756
+     "nozzleOneReading": 790483
+     "nozzleTwoReading": 883665
                 
 hsdtankone:
  hsdtankoneinitialvalue:
-     "openingStock": 13484
-     "nozzleOneReading":  889084
-     "nozzleTwoReading": 556115
-     "nozzleThreeReading": 134027
-     "nozzleFourReading": 132108
+     "openingStock": 4958
+     "nozzleOneReading":  1183506
+     "nozzleTwoReading": 679617
+     "nozzleThreeReading": 164416
+     "nozzleFourReading": 146986
       
              
         

@@ -56,7 +56,7 @@ public class UserServiceImplementation implements UserService {
 		Map<Object, Object> userSignUpMap = new HashMap<>();
 		var finoUserDetails = new FinoUserDetails();
 		var finoUserRoles = new FinoUserRoles();
-		var clientDetails=new ClientDetails();
+		
 		try {
 			finoUserDetails.setDateOfBirth(finoUserDetailsDto.getDateOfBirth());
 			finoUserDetails.setEmailId(finoUserDetailsDto.getEmailId());
@@ -65,16 +65,19 @@ public class UserServiceImplementation implements UserService {
 			finoUserDetails.setMobileNumber(finoUserDetailsDto.getMobileNumber());
 			finoUserDetails.setActive(true);
 			finoUserDetails.setPassword(this.passwordEncoder.encode(finoUserDetailsDto.getPassword()));
-			finoUserDetails.setRegisteredClientName(finoUserDetailsDto.getRegisteredClientName());
 			finoUserRoles.setRoleName(finoUserDetailsDto.getUserRole());
 			finoUserRoles.setRoleDescription(AppConstants.USER_ROLE_DESC + finoUserDetailsDto.getUserRole() + " Role");
 			finoUserRoles.setFinoUserDetails(finoUserDetails);
 			finoUserDetails.setFinoUserRoles(Arrays.asList(finoUserRoles));
-			clientDetails.setClientName((finoUserDetailsDto.getRegisteredClientName().isEmpty()||finoUserDetailsDto.getRegisteredClientName().isBlank()||finoUserDetailsDto.getRegisteredClientName()==null ?null:finoUserDetailsDto.getRegisteredClientName()));
-			clientDetails.setClientActive(Boolean.TRUE);
-			clientDetails.setFinoUserDetails(finoUserDetails);
+			
+			if(this.randomPasswordGenerator.isDatPresent(finoUserDetailsDto.getRegisteredClientName())){
+				var clientDetails=new ClientDetails();
+				clientDetails.setClientActive(Boolean.TRUE);
+				clientDetails.setClientName(finoUserDetailsDto.getRegisteredClientName());
+				clientDetails.setMobileNumber(finoUserDetailsDto.getMobileNumber());
+				this.clientDetailsRepository.save(clientDetails);
+			}
 			this.finoUserDetailsRepository.save(finoUserDetails);
-			this.clientDetailsRepository.save(clientDetails);
 			userSignUpMap.put(AppConstants.status, AppConstants.success);
 			userSignUpMap.put(AppConstants.statusCode, AppConstants.ok);
 			userSignUpMap.put(AppConstants.statusMessage, AppConstants.dataSubmitedsuccessfully);
@@ -253,7 +256,10 @@ public class UserServiceImplementation implements UserService {
 		if ( finoUserDetails!= null) {
 			try {
 				this.finoUserDetailsRepository.updateFinoUserStatus(false, mobileNumber);
-				this.clientDetailsRepository.updateClientStatus(false, this.clientDetailsRepository.findByFinoUserDetails(finoUserDetails).getClientId());
+				if(this.clientDetailsRepository.findByMobileNumber(mobileNumber)!=null ) {
+				this.clientDetailsRepository.updateClientStatus(false, this.clientDetailsRepository.findByMobileNumber(mobileNumber).getClientId());
+				}
+				
 			} catch (Exception e) {
 				throw new InternalServerError(e.getMessage());
 			}

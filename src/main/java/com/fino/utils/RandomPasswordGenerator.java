@@ -6,15 +6,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class RandomPasswordGenerator {
 
-    public  String doGeneratePassword(int passwordLength){
-     SecureRandom secureRandom=new SecureRandom();
-     String randomChaString="123456789@$#^&*()!~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-     String password="";
-     for (int i=0;i<passwordLength;i++){
-        password=password+randomChaString.charAt(secureRandom.nextInt(randomChaString.length()));
-     }
-      return password;
-    }
+	public String doGeneratePassword(int passwordLength) {
+		SecureRandom secureRandom = new SecureRandom();
+		String randomChaString = "123456789@$#^&*()!~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		String password = "";
+		for (int i = 0; i < passwordLength; i++) {
+			password = password + randomChaString.charAt(secureRandom.nextInt(randomChaString.length()));
+		}
+		return password;
+	}
 
+	public Boolean isDatPresent(String clientDetails) {
+
+		if (clientDetails != null && !clientDetails.isEmpty() && !clientDetails.isBlank()) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
 
 }

@@ -27,5 +27,5 @@ public interface ClientDetailsRepository extends JpaRepository<ClientDetails,Lon
 			@Param("isClientActive") boolean isClientActive,
 			@Param("clientId") Long clientId);
 
-	public ClientDetails findByFinoUserDetails(FinoUserDetails finoUserDetails);
+	public ClientDetails findByMobileNumber(String mobileNumber);
 }

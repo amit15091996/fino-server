@@ -6,7 +6,7 @@ import com.fino.entity.CmsTransactionDetails;
 
 public record ClientRecord(
 		Long clientId,String clientName,String bankName,List<CmsTransactionDetails> cmsTransactionDetails,
-		String mobileNumber
+		String mobileNumber,String companyName
 		) {
 
 }
