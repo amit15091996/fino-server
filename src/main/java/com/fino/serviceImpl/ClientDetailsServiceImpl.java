@@ -30,8 +30,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 	public Map<Object, Object> insertClientDetails(ClientDetailsDto clientDetailsDto) {
 		Map<Object, Object> clientResponseMap = new HashMap<>();
 		var clientDetails = new ClientDetails();
-		if (!clientDetailsDto.getCompanyName().isBlank() || !clientDetailsDto.getCompanyName().isEmpty()
-				|| clientDetailsDto.getCompanyName() != null) {
+		if (clientDetailsDto.getCompanyName() != null) {
 			clientDetails.setCompanyName(clientDetailsDto.getCompanyName());
 			clientDetails.setClientActive(Boolean.TRUE);
 			try {
@@ -77,10 +76,10 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 			}
 			return clientResponseMap;
 		} catch (Exception e) {
-			
+
 			throw new InternalServerError(e.getMessage());
 		}
-		
+
 	}
 
 	@Override
@@ -94,8 +93,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 					this.clientDetailsRepository.getAllActiveClients().stream().map((clientList) -> {
 						return new ClientRecord(clientList.getClientId(), clientList.getClientName(),
 								clientList.getBankName(), clientList.getCmsTransactionDetails(),
-								clientList.getFinoUserDetails() != null ? clientList.getFinoUserDetails().getMobileNumber()
-										: null);
+								clientList.getMobileNumber(),clientList.getCompanyName());
 					}).collect(Collectors.toList()));
 			return clientResponseMap;
 		} catch (Exception e) {
@@ -110,8 +108,8 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 		try {
 
 			var allCmsTxnOfUser = this.clientDetailsRepository.getAllActiveClients().stream()
-					.filter(user -> user.getFinoUserDetails() != null)
-					.filter(userDetails -> userDetails.getFinoUserDetails().getMobileNumber()
+					.filter(userDetails->userDetails.getMobileNumber()!=null)
+					.filter(userDetails -> userDetails.getMobileNumber()
 							.equalsIgnoreCase(mobileNumber))
 					.map(clientTxn -> clientTxn.getCmsTransactionDetails()).flatMap(cms -> cms.parallelStream())
 					.collect(Collectors.toList());

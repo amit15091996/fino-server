@@ -39,7 +39,5 @@ public class ClientDetails {
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recievedFrom", referencedColumnName = "clientName")
 	private List<CmsTransactionDetails> cmsTransactionDetails;
-	@OneToOne(fetch = FetchType.LAZY, targetEntity = FinoUserDetails.class)
-	@JoinColumn(referencedColumnName = "registeredClientName")
-	private FinoUserDetails finoUserDetails;
+	private String mobileNumber;
 }
