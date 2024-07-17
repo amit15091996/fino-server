@@ -1,4 +1,5 @@
 package com.fino.entity;
+
 import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,20 +24,22 @@ import lombok.Setter;
 @Table(name = "FINO_CLIENT_DETAILS")
 @Entity
 public class ClientDetails {
-    @TableGenerator(allocationSize = 10, initialValue = 2001, name = "fino_client_sequence")
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "fino_client_sequence")
-    private Long clientId;
-    @Column(length = 200,unique = true)
-    private String clientName;
-    @Column(length = 200)
-    private String bankName;
-    @Column(columnDefinition = "BOOLEAN", nullable = false)
+	@TableGenerator(allocationSize = 10, initialValue = 2001, name = "fino_client_sequence")
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "fino_client_sequence")
+	private Long clientId;
+	@Column(length = 200, unique = true)
+	private String clientName;
+	@Column(length = 200)
+	private String bankName;
+	@Column(length = 200)
+	private String companyName;
+	@Column(columnDefinition = "BOOLEAN", nullable = false)
 	private boolean isClientActive;
-    @OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recievedFrom", referencedColumnName = "clientName")
-    private List<CmsTransactionDetails> cmsTransactionDetails;
-    @OneToOne(fetch = FetchType.LAZY,targetEntity = FinoUserDetails.class)
-   	@JoinColumn(referencedColumnName = "registeredClientName")
-    private FinoUserDetails finoUserDetails;
+	private List<CmsTransactionDetails> cmsTransactionDetails;
+	@OneToOne(fetch = FetchType.LAZY, targetEntity = FinoUserDetails.class)
+	@JoinColumn(referencedColumnName = "registeredClientName")
+	private FinoUserDetails finoUserDetails;
 }

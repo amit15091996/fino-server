@@ -17,22 +17,17 @@ import jakarta.transaction.Transactional;
 public interface CmsTransactionRepository extends JpaRepository<CmsTransactionDetails, Long> {
 
 	List<CmsTransactionDetails> findByCollectedBy(String mobileNumber);
-	
+
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Query("UPDATE CmsTransactionDetails ctd  SET ctd.recievedFrom=:recievedFrom,"
-			+ "ctd.collectionAmount=:collectionAmount,"
-			+ "ctd.cmsTransactionDate=:cmsTransactionDate,"
-			+ "ctd.onlineAmount=:onlineAmount,"
-			+ "ctd.balanceAmount=:balanceAmount,"
-			+ "ctd.remarks=:remarks,"
-			+ "ctd.cashAmount=:cashAmount WHERE ctd.cmsTransactionId=:cmsTransactionId")
+			+ "ctd.collectionAmount=:collectionAmount," + "ctd.cmsTransactionDate=:cmsTransactionDate,"
+			+ "ctd.onlineAmount=:onlineAmount," + "ctd.balanceAmount=:balanceAmount," + "ctd.remarks=:remarks,"
+			+ "ctd.cashAmount=:cashAmount,"
+			+ "ctd.companyName=:companyName WHERE ctd.cmsTransactionId=:cmsTransactionId")
 	public void updateCmsTransactionDetals(@Param("recievedFrom") String recievedFrom,
 			@Param("collectionAmount") double collectionAmount,
-			@Param("cmsTransactionDate") LocalDate cmsTransactionDate,
-			@Param("onlineAmount") double onlineAmount,
-			@Param("balanceAmount") double balanceAmount,
-			@Param("cashAmount") double cashAmount, 
-			@Param("remarks") String remarks,
-			@Param("cmsTransactionId") Long cmsTransactionId);
-	
+			@Param("cmsTransactionDate") LocalDate cmsTransactionDate, @Param("onlineAmount") double onlineAmount,
+			@Param("balanceAmount") double balanceAmount, @Param("cashAmount") double cashAmount,
+			@Param("remarks") String remarks,@Param("companyName") String companyName ,@Param("cmsTransactionId") Long cmsTransactionId);
+
 }

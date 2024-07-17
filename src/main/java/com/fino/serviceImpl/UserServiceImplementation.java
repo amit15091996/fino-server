@@ -87,6 +87,9 @@ public class UserServiceImplementation implements UserService {
 	@Override
 	public Map<Object, Object> getAllFinoUsersDetails() {
 		Map<Object, Object> userResponseMap = new HashMap<>();
+		
+		try {
+		
 		userResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		userResponseMap.put(AppConstants.status, AppConstants.success);
 		userResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
@@ -98,6 +101,10 @@ public class UserServiceImplementation implements UserService {
 				}).collect(Collectors.toList()));
 
 		return userResponseMap;
+		
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 
 	}
 

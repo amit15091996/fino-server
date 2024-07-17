@@ -14,6 +14,7 @@ import com.fino.configuration.FuelReportConfig.HsdTankOneInitialData;
 import com.fino.dto.FuelReports.HsdTankOneDto;
 import com.fino.entity.FuelReports.DieselTankOne;
 import com.fino.exception.BadRequest;
+import com.fino.exception.InternalServerError;
 import com.fino.exception.NotFoundException;
 import com.fino.helpers.AppConstants;
 import com.fino.repository.FuelReportsRepository.DieselTankOneRepository;
@@ -79,6 +80,8 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 	@Override
 	public Map<Object, Object> deleteHsdTankOneDetails(Long hsdTankOneId) {
 		Map<Object, Object> hsdTankOneResponseMap = new HashMap<>();
+		try {
+			
 		if (this.dieselTankOneRepository.findById(hsdTankOneId).isPresent()) {
 			this.dieselTankOneRepository.deleteById(hsdTankOneId);
 			hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
@@ -88,6 +91,9 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 			throw new NotFoundException(AppConstants.noRecordFound + hsdTankOneId);
 		}
 		return hsdTankOneResponseMap;
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 	@Override
@@ -140,12 +146,17 @@ public class HsdTankOneServiceImpl implements HsdTankOneService {
 
 	@Override
 	public Map<Object, Object> getAllHsdTankOneDetails() {
+		
+		try {
 		Map<Object, Object> hsdTankOneResponseMap = new HashMap<>();
 		hsdTankOneResponseMap.put(AppConstants.statusCode, AppConstants.ok);
 		hsdTankOneResponseMap.put(AppConstants.status, AppConstants.success);
 		hsdTankOneResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
 		hsdTankOneResponseMap.put(AppConstants.response, this.dieselTankOneRepository.findAll());
 		return hsdTankOneResponseMap;
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
+		}
 	}
 
 	Predicate<DieselTankOne> hsdTankOnePreviousDay = (tankOne) -> {

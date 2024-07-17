@@ -52,15 +52,20 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Override
 	public Map<Object, Object> deleteBankTransactionDetails(Long bankTransactionId) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
-		if (this.bankTransactionRepository.findById(bankTransactionId).isPresent()) {
-			this.bankTransactionRepository.deleteById(bankTransactionId);
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
-		} else {
-			throw new NotFoundException(AppConstants.noRecordFound + bankTransactionId);
+		try {
+			if (this.bankTransactionRepository.findById(bankTransactionId).isPresent()) {
+				this.bankTransactionRepository.deleteById(bankTransactionId);
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataDeletedSuccesFully);
+			} else {
+				throw new NotFoundException(AppConstants.noRecordFound + bankTransactionId);
+			}
+			return bankResponseMap;
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
-		return bankResponseMap;
+
 	}
 
 	@Override
@@ -68,23 +73,28 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 			TransactionDetailsDto transactionDetailsDto) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
 
-		if (this.bankTransactionRepository.findById(bankTransactionId).isPresent()) {
-			try {
-				this.bankTransactionRepository.updateBankTransactionDetals(transactionDetailsDto.getRecievedFrom(),
-						transactionDetailsDto.getCollectionAmount(), transactionDetailsDto.getTransactionDate(),
-						transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(), bankTransactionId);
+		try {
+			if (this.bankTransactionRepository.findById(bankTransactionId).isPresent()) {
+				try {
+					this.bankTransactionRepository.updateBankTransactionDetals(transactionDetailsDto.getRecievedFrom(),
+							transactionDetailsDto.getCollectionAmount(), transactionDetailsDto.getTransactionDate(),
+							transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(),
+							bankTransactionId);
 
-				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-				bankResponseMap.put(AppConstants.status, AppConstants.success);
-				bankResponseMap.put(AppConstants.statusMessage,
-						AppConstants.recordUpdatedSuccessFully + bankTransactionId);
+					bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+					bankResponseMap.put(AppConstants.status, AppConstants.success);
+					bankResponseMap.put(AppConstants.statusMessage,
+							AppConstants.recordUpdatedSuccessFully + bankTransactionId);
 
-			} catch (Exception e) {
-				throw new BadRequest(e.getMessage());
+				} catch (Exception e) {
+					throw new BadRequest(e.getMessage());
+				}
+
+			} else {
+				throw new NotFoundException(AppConstants.noRecordFound + bankTransactionId);
 			}
-
-		} else {
-			throw new NotFoundException(AppConstants.noRecordFound + bankTransactionId);
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
 
 		return bankResponseMap;
@@ -93,69 +103,80 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 	@Override
 	public Map<Object, Object> getAllBankTransactionDetails(String mobileNumber, String allTransaction) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
-		if (allTransaction != null && allTransaction.equalsIgnoreCase("ALL")) {
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response, this.bankTransactionRepository.findAll());
-			return bankResponseMap;
-		} else {
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response, this.bankTransactionRepository.findBydepositedBy(mobileNumber));
-			return bankResponseMap;
+
+		try {
+
+			if (allTransaction != null && allTransaction.equalsIgnoreCase("ALL")) {
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response, this.bankTransactionRepository.findAll());
+				return bankResponseMap;
+			} else {
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response,
+						this.bankTransactionRepository.findBydepositedBy(mobileNumber));
+				return bankResponseMap;
+			}
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
 
 	}
 
 	@Override
 	public Map<Object, Object> getAllBankTransactionDetailsViaSerachParams(String mobileNumber, String year,
-			String month,
-			String fromDate, String toDate) {
+			String month, String fromDate, String toDate) {
 		Map<Object, Object> bankResponseMap = new HashMap<>();
+		try {
 
-		if (year != null) {
-			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository
-					.findBydepositedBy(mobileNumber);
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response,
-					bankDepositByYear.stream().filter(
-							deposit -> deposit.getBankTransactionDate().toString().split("-")[0].equalsIgnoreCase(year))
-							.collect(Collectors.toList()));
+			if (year != null) {
+				List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository
+						.findBydepositedBy(mobileNumber);
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response, bankDepositByYear.stream().filter(
+						deposit -> deposit.getBankTransactionDate().toString().split("-")[0].equalsIgnoreCase(year))
+						.collect(Collectors.toList()));
+			}
+
+			else if (month != null) {
+				List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository
+						.findBydepositedBy(mobileNumber);
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response, bankDepositByYear.stream().filter(
+						deposit -> deposit.getBankTransactionDate().toString().split("-")[1].equalsIgnoreCase(month))
+						.collect(Collectors.toList()));
+			}
+
+			else if (fromDate != null && toDate != null) {
+				List<BankTransactionDetails> bankDepositByDate = this.bankTransactionRepository
+						.findBydepositedBy(mobileNumber);
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response, this.filterTransactionByDate
+						.getAllBankTransactionBetweenDates(fromDate, toDate, bankDepositByDate));
+			}
+
+			else {
+				bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
+				bankResponseMap.put(AppConstants.status, AppConstants.success);
+				bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
+				bankResponseMap.put(AppConstants.response, Collections.EMPTY_LIST);
+			}
+
+			return bankResponseMap;
+
+		} catch (Exception e) {
+			throw new InternalServerError(e.getMessage());
 		}
 
-		else if (month != null) {
-			List<BankTransactionDetails> bankDepositByYear = this.bankTransactionRepository
-					.findBydepositedBy(mobileNumber);
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response, bankDepositByYear.stream().filter(
-					deposit -> deposit.getBankTransactionDate().toString().split("-")[1].equalsIgnoreCase(month))
-					.collect(Collectors.toList()));
-		}
-
-		else if (fromDate != null && toDate != null) {
-			List<BankTransactionDetails> bankDepositByDate = this.bankTransactionRepository
-					.findBydepositedBy(mobileNumber);
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response, this.filterTransactionByDate
-					.getAllBankTransactionBetweenDates(fromDate, toDate, bankDepositByDate));
-		}
-
-		else {
-			bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);
-			bankResponseMap.put(AppConstants.status, AppConstants.success);
-			bankResponseMap.put(AppConstants.statusMessage, AppConstants.dataFetchedSuccesfully);
-			bankResponseMap.put(AppConstants.response, Collections.EMPTY_LIST);
-		}
-
-		return bankResponseMap;
 	}
 
 }

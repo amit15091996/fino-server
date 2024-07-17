@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionDetailsDto {
-	
+
 	private String recievedFrom;
 	private String collectedBy;
 	private double collectionAmount;
@@ -33,5 +33,6 @@ public class TransactionDetailsDto {
 	private double cashAmount;
 	private double balanceAmount;
 	private String remarks;
+	private String companyName;
 
 }

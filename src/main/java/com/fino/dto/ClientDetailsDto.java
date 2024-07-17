@@ -8,5 +8,5 @@ import lombok.*;
 public class ClientDetailsDto {
     private String clientName;
     private String bankName;
-
+    private String companyName;
 }
