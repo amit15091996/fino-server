@@ -36,6 +36,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 		bankTransactionDetails.setCollectionAmount(transactionDetailsDto.getCollectionAmount());
 		bankTransactionDetails.setDepositedInBank(transactionDetailsDto.getRecievedFrom());
 		bankTransactionDetails.setRemarks(transactionDetailsDto.getRemarks());
+		bankTransactionDetails.setTransactionRefNumber(transactionDetailsDto.getTransactionRefNumber());
 		try {
 			var bankTransactionDetailsResponse = this.bankTransactionRepository.save(bankTransactionDetails);
 			if (bankTransactionDetailsResponse != null) {
@@ -78,7 +79,7 @@ public class BankTransactionServiceImpl implements BankTransactionService {
 				try {
 					this.bankTransactionRepository.updateBankTransactionDetals(transactionDetailsDto.getRecievedFrom(),
 							transactionDetailsDto.getCollectionAmount(), transactionDetailsDto.getTransactionDate(),
-							transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(),
+							transactionDetailsDto.getCashAmount(), transactionDetailsDto.getRemarks(),transactionDetailsDto.getTransactionRefNumber(),
 							bankTransactionId);
 
 					bankResponseMap.put(AppConstants.statusCode, AppConstants.ok);

@@ -34,5 +34,6 @@ public class TransactionDetailsDto {
 	private double balanceAmount;
 	private String remarks;
 	private String companyName;
+	private String transactionRefNumber;
 
 }

@@ -26,6 +26,9 @@ import com.fino.repository.FinoUserRolesRepository;
 import com.fino.service.UserService;
 import com.fino.utils.JavaMailUtil;
 import com.fino.utils.RandomPasswordGenerator;
+
+import jakarta.transaction.Transactional;
+
 import com.fino.exception.*;
 
 @Service

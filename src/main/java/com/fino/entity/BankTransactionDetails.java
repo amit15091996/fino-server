@@ -47,4 +47,6 @@ public class BankTransactionDetails {
 	private double cashAmount;
 	@Column(length =5000)
 	private String remarks;
+	@Column(length = 100)
+	private String transactionRefNumber;
 }

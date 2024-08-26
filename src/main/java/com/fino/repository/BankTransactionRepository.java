@@ -24,12 +24,14 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
 			+ "btd.collectionAmount=:collectionAmount,"
 			+ "btd.bankTransactionDate=:bankTransactionDate,"
 			+ "btd.remarks=:remarks,"
+			+ "btd.transactionRefNumber=:transactionRefNumber,"
 			+ "btd.cashAmount=:cashAmount WHERE btd.bankTransactionId=:bankTransactionId")
 	public void updateBankTransactionDetals(@Param("depositedInBank") String depositedInBank,
 			@Param("collectionAmount") double collectionAmount,
 			@Param("bankTransactionDate") LocalDate bankTransactionDate,
 			@Param("cashAmount") double cashAmount, 
 			@Param("remarks") String remarks,
+			@Param("transactionRefNumber") String transactionRefNumber,
 			@Param("bankTransactionId") Long bankTransactionId);
 
 	
